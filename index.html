@@ -2,137 +2,24 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Liga de Fútbol - Jornadas</title>
+  <title>Liga 1ª RFEF - Grupo 2</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 20px;
-      background-color: #f5f5f5;
-    }
-
-    h1, h2 {
-      text-align: center;
-      color: #2c3e50;
-    }
-
-    .container {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-    }
-
-    .jornadas {
-      flex: 2;
-    }
-
-    .jornada {
-      background-color: #ffffff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
-    .jornada h3 {
-      margin-top: 0;
-      color: #2980b9;
-    }
-
-    label {
-      display: block;
-      margin: 10px 0;
-    }
-
-    select {
-      margin-left: 10px;
-      padding: 5px;
-    }
-
-    .clasificacion {
-      flex: 1;
-      background-color: #ffffff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      height: fit-content;
-      max-height: 80vh;
-      position: sticky;
-      top: 20px;
-      overflow-y: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 6px;
-      text-align: center;
-    }
-
-    .destacado-azul {
-      background-color: #d0e8ff;
-      font-weight: bold;
-    }
-
-    .destacado-verde {
-      background-color: #d9fdd3;
-    }
-
-    .destacado-rojo {
-      background-color: #ffcccc;
-      font-weight: bold;
-    }
-
-    .leyenda {
-      margin-top: 10px;
-      font-size: 0.9em;
-    }
-
-    .leyenda span {
-      display: inline-block;
-      width: 20px;
-      height: 10px;
-      margin-right: 5px;
-    }
-
-    .azul { background-color: #d0e8ff; }
-    .verde { background-color: #d9fdd3; }
-    .rojo { background-color: #ffcccc; }
+    body { font-family: Arial, sans-serif; }
+    .clasificacion, .jornada { margin-bottom: 30px; }
+    .clasificacion table { border-collapse: collapse; width: 100%; }
+    .clasificacion th, .clasificacion td { border: 1px solid #ccc; padding: 5px; text-align: center; }
+    .jornada div { margin-bottom: 5px; }
+    .leyenda span { margin-right: 20px; }
   </style>
 </head>
 <body>
-
-  <h1>Calendario de Jornadas - Liga de Fútbol</h1>
-
-  <div class="container">
-    <div class="jornadas" id="partidos-container"></div>
-
-    <div class="clasificacion">
-      <h2>Clasificación</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Pos.</th>
-            <th>Equipo</th>
-            <th>Pts</th>
-          </tr>
-        </thead>
-        <tbody id="tabla-cuerpo"></tbody>
-      </table>
-      <div class="leyenda">
-        <p><span class="azul"></span>1ª Posición (Ascenso directo)</p>
-        <p><span class="verde"></span>2ª a 5ª Posición (Playoffs)</p>
-        <p><span class="rojo"></span>16ª a 20ª Posición (Descenso)</p>
-      </div>
-    </div>
-  </div>
+  <h1>Clasificación 1ª RFEF - Grupo 2</h1>
+  <div id="clasificacion" class="clasificacion"></div>
+  <h2>Jornadas</h2>
+  <div id="jornadas" class="jornadas"></div>
 
   <script>
-    const puntosIniciales = {
+    const equipos = {
       "AD Ceuta FC": 57,
       "Real Murcia": 53,
       "Antequera CF": 53,
@@ -156,164 +43,41 @@
     };
 
     const jornadas = [
-      {
-        nombre: "Jornada 34",
-        partidos: [
-          ["Real Murcia", "Atlético B"],
-          ["Antequera CF", "UD Ibiza"],
-          ["AD Ceuta FC", "Recreativo"],
-          ["AD Mérida", "Alcorcón"],
-          ["Sevilla At", "RM Castilla"],
-          ["Betis Deportivo", "Villarreal B"],
-          ["Hércules", "Alcoyano"],
-          ["CF Intercity", "Fuenlabrada"],
-          ["Algeciras CF", "Yeclano Deportivo"],
-          ["At. Sanluqueño", "Marbella FC"]
-        ]
-      },
-      {
-        nombre: "Jornada 35",
-        partidos: [
-          ["Atlético B", "Antequera CF"],
-          ["UD Ibiza", "AD Ceuta FC"],
-          ["Recreativo", "Real Murcia"],
-          ["Alcorcón", "Sevilla At"],
-          ["RM Castilla", "AD Mérida"],
-          ["Villarreal B", "Betis Deportivo"],
-          ["Alcoyano", "CF Intercity"],
-          ["Fuenlabrada", "Hércules"],
-          ["Yeclano Deportivo", "At. Sanluqueño"],
-          ["Marbella FC", "Algeciras CF"]
-        ]
-      },
-      {
-        nombre: "Jornada 36",
-        partidos: [
-          ["Atlético B", "UD Ibiza"],
-          ["AD Ceuta FC", "Recreativo"],
-          ["Antequera CF", "Real Murcia"],
-          ["Sevilla At", "RM Castilla"],
-          ["AD Mérida", "Betis Deportivo"],
-          ["Alcorcón", "Villarreal B"],
-          ["CF Intercity", "Fuenlabrada"],
-          ["Hércules", "Yeclano Deportivo"],
-          ["Alcoyano", "At. Sanluqueño"],
-          ["Algeciras CF", "Marbella FC"]
-        ]
-      },
-      {
-        nombre: "Jornada 37",
-        partidos: [
-          ["AD Ceuta FC", "Atlético B"],
-          ["UD Ibiza", "Antequera CF"],
-          ["Recreativo", "Real Murcia"],
-          ["RM Castilla", "Sevilla At"],
-          ["Betis Deportivo", "AD Mérida"],
-          ["Villarreal B", "Alcorcón"],
-          ["Fuenlabrada", "CF Intercity"],
-          ["Yeclano Deportivo", "Hércules"],
-          ["At. Sanluqueño", "Alcoyano"],
-          ["Marbella FC", "Algeciras CF"]
-        ]
-      },
-      {
-        nombre: "Jornada 38",
-        partidos: [
-          ["Atlético B", "Recreativo"],
-          ["Antequera CF", "AD Ceuta FC"],
-          ["Real Murcia", "UD Ibiza"],
-          ["Sevilla At", "Alcorcón"],
-          ["AD Mérida", "RM Castilla"],
-          ["Betis Deportivo", "Alcoyano"],
-          ["Villarreal B", "CF Intercity"],
-          ["Hércules", "Fuenlabrada"],
-          ["Yeclano Deportivo", "Marbella FC"],
-          ["Algeciras CF", "At. Sanluqueño"]
-        ]
-      }
+      ["Marbella FC - Atlético B", "At. Sanluqueño - CF Intercity", "Alcoyano - Recreativo", "Yeclano Deportivo - Algeciras CF", "RM Castilla - AD Ceuta FC", "Sevilla At - Betis Deportivo", "AD Mérida - Antequera CF", "Real Murcia - Villarreal B", "Hércules - Alcorcón", "UD Ibiza - Fuenlabrada"],
+      ["Algeciras CF - Betis Deportivo", "AD Ceuta FC - AD Mérida", "Alcorcón - Yeclano Deportivo", "At. Sanluqueño - Alcoyano", "Antequera CF - Sevilla At", "Atlético B - Fuenlabrada", "Recreativo - UD Ibiza", "CF Intercity - Real Murcia", "RM Castilla - Marbella FC", "Villarreal B - Hércules"],
+      ["UD Ibiza - Alcorcón", "Alcoyano - CF Intercity", "Yeclano Deportivo - Villarreal B", "Betis Deportivo - At. Sanluqueño", "Real Murcia - Antequera CF", "Fuenlabrada - AD Ceuta FC", "Sevilla At - Atlético B", "AD Mérida - RM Castilla", "Marbella FC - Recreativo", "Hércules - Algeciras CF"],
+      ["AD Ceuta FC - Yeclano Deportivo", "Alcorcón - Marbella FC", "Algeciras CF - Alcoyano", "Antequera CF - Betis Deportivo", "Atlético B - UD Ibiza", "CF Intercity - Hércules", "RM Castilla - Fuenlabrada", "Recreativo - AD Mérida", "At. Sanluqueño - Real Murcia", "Villarreal B - Sevilla At"],
+      ["Fuenlabrada - Recreativo", "Hércules - At. Sanluqueño", "Betis Deportivo - Villarreal B", "AD Mérida - Atlético B", "Sevilla At - Alcorcón", "Yeclano Deportivo - CF Intercity", "UD Ibiza - AD Ceuta FC", "Marbella FC - Antequera CF", "Real Murcia - Algeciras CF", "Alcoyano - RM Castilla"]
     ];
 
-    function crearJornadas() {
-      const container = document.getElementById("partidos-container");
+    function mostrarClasificacion() {
+      const clasificacion = Object.entries(equipos)
+        .sort((a, b) => b[1] - a[1])
+        .map(([equipo, puntos], i) => 
+          `<tr><td>${i+1}</td><td>${equipo}</td><td>${puntos}</td></tr>`
+        ).join("");
 
-      jornadas.forEach((jornada, index) => {
-        const div = document.createElement("div");
-        div.className = "jornada";
-
-        const h3 = document.createElement("h3");
-        h3.textContent = jornada.nombre;
-        div.appendChild(h3);
-
-        jornada.partidos.forEach((partido, i) => {
-          const label = document.createElement("label");
-          label.textContent = `${partido[0]} vs ${partido[1]}`;
-
-          const select = document.createElement("select");
-          select.id = `partido-${index}-${i}`;
-          select.setAttribute("data-local", partido[0]);
-          select.setAttribute("data-visitante", partido[1]);
-
-          select.appendChild(new Option("Seleccionar resultado", ""));
-          select.appendChild(new Option(`${partido[0]} gana`, partido[0]));
-          select.appendChild(new Option("Empate", "empate"));
-          select.appendChild(new Option(`${partido[1]} gana`, partido[1]));
-
-          select.addEventListener("change", calcularTabla);
-
-          label.appendChild(select);
-          div.appendChild(label);
-        });
-
-        container.appendChild(div);
-      });
+      document.getElementById("clasificacion").innerHTML = `
+        <table>
+          <thead><tr><th>Pos</th><th>Equipo</th><th>Puntos</th></tr></thead>
+          <tbody>${clasificacion}</tbody>
+        </table>
+      `;
     }
 
-    function calcularTabla() {
-      const puntos = { ...puntosIniciales };
-
-      const selects = document.querySelectorAll("select");
-      selects.forEach(select => {
-        const valor = select.value;
-        if (!valor) return;
-
-        const local = select.getAttribute("data-local");
-        const visitante = select.getAttribute("data-visitante");
-
-        if (valor === "empate") {
-          puntos[local] += 1;
-          puntos[visitante] += 1;
-        } else {
-          puntos[valor] += 3;
-        }
-      });
-
-      const clasificacion = Object.entries(puntos).sort((a, b) => b[1] - a[1]);
-
-      const cuerpo = document.getElementById("tabla-cuerpo");
-      cuerpo.innerHTML = "";
-
-      clasificacion.forEach(([equipo, pts], index) => {
-        const fila = document.createElement("tr");
-
-        if (index === 0) {
-          fila.classList.add("destacado-azul");
-        } else if (index >= 1 && index <= 4) {
-          fila.classList.add("destacado-verde");
-        } else if (index >= 15 && index <= 19) {
-          fila.classList.add("destacado-rojo");
-        }
-
-        fila.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${equipo}</td>
-          <td>${pts}</td>
-        `;
-        cuerpo.appendChild(fila);
-      });
+    function mostrarJornadas() {
+      const jornadasHTML = jornadas.map((partidos, index) => `
+        <div class="jornada">
+          <h3>Jornada ${34 + index}</h3>
+          ${partidos.map(p => `<div>${p}</div>`).join("")}
+        </div>
+      `).join("");
+      document.getElementById("jornadas").innerHTML = jornadasHTML;
     }
 
-    crearJornadas();
-    calcularTabla(); // Esto hace que la tabla se muestre desde el inicio
+    mostrarClasificacion();
+    mostrarJornadas();
   </script>
 </body>
 </html>
+
