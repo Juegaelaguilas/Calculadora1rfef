@@ -273,40 +273,52 @@
 
       const selects = document.querySelectorAll("select");
       selects.forEach(select => {
+        const valor = select.value;
         const local = select.getAttribute("data-local");
         const visitante = select.getAttribute("data-visitante");
 
-        if (select.value === local) {
+        if (valor === local) {
           puntos[local] += 3;
-        } else if (select.value === visitante) {
+        } else if (valor === visitante) {
           puntos[visitante] += 3;
-        } else if (select.value === "empate") {
+        } else if (valor === "empate") {
           puntos[local] += 1;
           puntos[visitante] += 1;
         }
       });
 
-      const clasificacion = Object.entries(puntos).sort((a, b) => b[1] - a[1]);
-      const tbody = document.getElementById("tabla-cuerpo");
-      tbody.innerHTML = "";
+      const tabla = Object.entries(puntos).sort((a, b) => b[1] - a[1]);
 
-      clasificacion.forEach(([equipo, puntos], index) => {
+      const cuerpoTabla = document.getElementById("tabla-cuerpo");
+      cuerpoTabla.innerHTML = "";
+
+      tabla.forEach(([equipo, puntos], index) => {
         const tr = document.createElement("tr");
-        tr.classList.add(
-          index === 0 ? "destacado-azul" :
-          index >= 1 && index <= 4 ? "destacado-verde" :
-          index >= 16 ? "destacado-rojo" : ""
-        );
+        const tdPos = document.createElement("td");
+        tdPos.textContent = index + 1;
+        const tdEquipo = document.createElement("td");
+        tdEquipo.textContent = equipo;
+        const tdPuntos = document.createElement("td");
+        tdPuntos.textContent = puntos;
 
-        tr.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${equipo}</td>
-          <td>${puntos}</td>
-        `;
-        tbody.appendChild(tr);
+        tr.appendChild(tdPos);
+        tr.appendChild(tdEquipo);
+        tr.appendChild(tdPuntos);
+
+        // Colorear según la posición
+        if (index === 0) {
+          tr.classList.add("destacado-azul");
+        } else if (index >= 1 && index <= 4) {
+          tr.classList.add("destacado-verde");
+        } else if (index >= 16 && index <= 19) {
+          tr.classList.add("destacado-rojo");
+        }
+
+        cuerpoTabla.appendChild(tr);
       });
     }
 
+    // Inicializar la página
     crearJornadas();
     calcularTabla();
   </script>
