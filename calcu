@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Calculadora virtual</title>
+  <title>Liga de Fútbol - Jornadas</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -106,7 +106,7 @@
 </head>
 <body>
 
-  <h1>Calculadora virtual GRUPO 2</h1>
+  <h1>Calendario de Jornadas - Liga de Fútbol</h1>
 
   <div class="container">
     <div class="jornadas" id="partidos-container"></div>
@@ -133,45 +133,104 @@
 
   <script>
     const puntosIniciales = {
-      "AD Ceuta FC": 54,
-      "Real Murcia": 53,
-      "Antequera CF": 53,
-      "UD Ibiza": 49,
-      "AD Mérida": 49,
-      "Sevilla At": 47,
-      "Atlético B": 47,
-      "Hércules": 44,
-      "RM Castilla": 43,
-      "Algeciras CF": 43,
-      "Alcorcón": 41,
-      "Betis Deportivo": 41,
-      "Villarreal B": 39,
+      "AD Ceuta FC": 57,
+      "Real Murcia": 56,
+      "Antequera CF": 56,
+      "UD Ibiza": 50,
+      "AD Mérida": 52,
+      "Sevilla At": 48,
+      "Atlético B": 50,
+      "Hércules": 47,
+      "RM Castilla": 44,
+      "Algeciras CF": 46,
+      "Alcorcón": 42,
+      "Betis Deportivo": 44,
+      "Villarreal B": 42,
       "Fuenlabrada": 39,
       "Marbella FC": 37,
       "Yeclano Deportivo": 35,
       "Atlético Sanluqueño": 35,
-      "Recreativo": 35,
+      "Recreativo": 38,
       "Alcoyano": 34,
       "CF Intercity": 28
     };
 
     const jornadas = [
       {
-        nombre: "Jornada 33",
+        nombre: "Jornada 34",
         partidos: [
-          ["UD Ibiza", "Sevilla At"],
-          ["Villarreal B", "CF Intercity"],
-          ["AD Ceuta FC", "Marbella FC"],
-          ["Betis Deportivo", "Hércules"],
-          ["Antequera CF", "Yeclano Deportivo"],
-          ["Atlético B", "Alcoyano"],
-          ["Fuenlabrada", "AD Mérida"],
-          ["Recreativo", "RM Castilla"],
-          ["Alcorcón", "Real Murcia"],
-          ["Algeciras CF", "Atlético Sanluqueño"]
+          ["Atlético B", "Betis Deportivo"],
+          ["Real Murcia", "Antequera CF"],
+          ["RM Castilla", "AD Ceuta FC"],
+          ["Hércules", "UD Ibiza"],
+          ["CF Intercity", "Algeciras CF"],
+          ["Sevilla At", "Alcorcón"],
+          ["AD Mérida", "Villarreal B"],
+          ["Alcoyano", "Marbella FC"],
+          ["Yeclano Deportivo", "Fuenlabrada"],
+          ["Atlético Sanluqueño", "Recreativo"]
         ]
       },
-      // Añade aquí las jornadas 34, 35, 36, 37 y 38 como en el código original
+      {
+        nombre: "Jornada 35",
+        partidos: [
+          ["AD Ceuta FC", "Atlético B"],
+          ["Antequera CF", "RM Castilla"],
+          ["UD Ibiza", "Real Murcia"],
+          ["Betis Deportivo", "CF Intercity"],
+          ["Algeciras CF", "Hércules"],
+          ["Villarreal B", "Sevilla At"],
+          ["Alcorcón", "AD Mérida"],
+          ["Fuenlabrada", "Alcoyano"],
+          ["Recreativo", "Yeclano Deportivo"],
+          ["Marbella FC", "Atlético Sanluqueño"]
+        ]
+      },
+      {
+        nombre: "Jornada 36",
+        partidos: [
+          ["Atlético B", "Antequera CF"],
+          ["RM Castilla", "Betis Deportivo"],
+          ["Real Murcia", "AD Ceuta FC"],
+          ["Hércules", "UD Ibiza"],
+          ["CF Intercity", "Villarreal B"],
+          ["Sevilla At", "Algeciras CF"],
+          ["AD Mérida", "Alcorcón"],
+          ["Alcoyano", "Recreativo"],
+          ["Yeclano Deportivo", "Fuenlabrada"],
+          ["Atlético Sanluqueño", "Marbella FC"]
+        ]
+      },
+      {
+        nombre: "Jornada 37",
+        partidos: [
+          ["AD Ceuta FC", "RM Castilla"],
+          ["Antequera CF", "Atlético B"],
+          ["UD Ibiza", "Real Murcia"],
+          ["Betis Deportivo", "CF Intercity"],
+          ["Algeciras CF", "Sevilla At"],
+          ["Villarreal B", "Hércules"],
+          ["Alcorcón", "AD Mérida"],
+          ["Fuenlabrada", "Yeclano Deportivo"],
+          ["Recreativo", "Alcoyano"],
+          ["Marbella FC", "Atlético Sanluqueño"]
+        ]
+      },
+      {
+        nombre: "Jornada 38",
+        partidos: [
+          ["Atlético B", "AD Ceuta FC"],
+          ["RM Castilla", "Antequera CF"],
+          ["Real Murcia", "UD Ibiza"],
+          ["Hércules", "Algeciras CF"],
+          ["CF Intercity", "Betis Deportivo"],
+          ["Sevilla At", "Villarreal B"],
+          ["AD Mérida", "Alcorcón"],
+          ["Alcoyano", "Fuenlabrada"],
+          ["Yeclano Deportivo", "Recreativo"],
+          ["Atlético Sanluqueño", "Marbella FC"]
+        ]
+      }
     ];
 
     function crearJornadas() {
