@@ -134,25 +134,25 @@
   <script>
     const puntosIniciales = {
       "AD Ceuta FC": 57,
-      "Real Murcia": 56,
-      "Antequera CF": 56,
-      "UD Ibiza": 50,
-      "AD Mérida": 52,
-      "Sevilla At": 48,
-      "Atlético B": 50,
-      "Hércules": 47,
-      "RM Castilla": 44,
-      "Algeciras CF": 46,
-      "Alcorcón": 42,
+      "Real Murcia": 53,
+      "Antequera CF": 53,
+      "UD Ibiza": 52,
+      "AD Mérida": 50,
+      "Atlético B": 49,
+      "Sevilla At": 47,
+      "RM Castilla": 46,
+      "Alcorcón": 44,
+      "Hércules": 44,
+      "Algeciras CF": 44,
       "Betis Deportivo": 44,
-      "Villarreal B": 42,
-      "Fuenlabrada": 39,
+      "Villarreal B": 40,
+      "Fuenlabrada": 40,
+      "Yeclano Deportivo": 38,
       "Marbella FC": 37,
-      "Yeclano Deportivo": 35,
-      "Atlético Sanluqueño": 35,
-      "Recreativo": 38,
+      "Atlético Sanluqueño": 36,
+      "Recreativo": 35,
       "Alcoyano": 34,
-      "CF Intercity": 28
+      "CF Intercity": 29
     };
 
     const jornadas = [
@@ -273,42 +273,37 @@
 
       const selects = document.querySelectorAll("select");
       selects.forEach(select => {
-        const valor = select.value;
-        if (!valor) return;
-
         const local = select.getAttribute("data-local");
         const visitante = select.getAttribute("data-visitante");
 
-        if (valor === "empate") {
+        if (select.value === local) {
+          puntos[local] += 3;
+        } else if (select.value === visitante) {
+          puntos[visitante] += 3;
+        } else if (select.value === "empate") {
           puntos[local] += 1;
           puntos[visitante] += 1;
-        } else {
-          puntos[valor] += 3;
         }
       });
 
       const clasificacion = Object.entries(puntos).sort((a, b) => b[1] - a[1]);
+      const tbody = document.getElementById("tabla-cuerpo");
+      tbody.innerHTML = "";
 
-      const cuerpo = document.getElementById("tabla-cuerpo");
-      cuerpo.innerHTML = "";
+      clasificacion.forEach(([equipo, puntos], index) => {
+        const tr = document.createElement("tr");
+        tr.classList.add(
+          index === 0 ? "destacado-azul" :
+          index >= 1 && index <= 4 ? "destacado-verde" :
+          index >= 16 ? "destacado-rojo" : ""
+        );
 
-      clasificacion.forEach(([equipo, pts], index) => {
-        const fila = document.createElement("tr");
-
-        if (index === 0) {
-          fila.classList.add("destacado-azul");
-        } else if (index >= 1 && index <= 4) {
-          fila.classList.add("destacado-verde");
-        } else if (index >= 15 && index <= 19) {
-          fila.classList.add("destacado-rojo");
-        }
-
-        fila.innerHTML = `
+        tr.innerHTML = `
           <td>${index + 1}</td>
           <td>${equipo}</td>
-          <td>${pts}</td>
+          <td>${puntos}</td>
         `;
-        cuerpo.appendChild(fila);
+        tbody.appendChild(tr);
       });
     }
 
