@@ -159,6 +159,7 @@
       {
         nombre: "Jornada 34",
         partidos: [
+          ["Yeclano Deportivo", "Algeciras CF"],
           ["Atlético B", "Betis Deportivo"],
           ["Real Murcia", "Antequera CF"],
           ["RM Castilla", "AD Ceuta FC"],
@@ -167,68 +168,67 @@
           ["Sevilla At", "Alcorcón"],
           ["AD Mérida", "Villarreal B"],
           ["Alcoyano", "Marbella FC"],
-          ["Yeclano Deportivo", "Fuenlabrada"],
           ["Atlético Sanluqueño", "Recreativo"]
         ]
       },
       {
         nombre: "Jornada 35",
         partidos: [
-          ["AD Ceuta FC", "Atlético B"],
-          ["Antequera CF", "RM Castilla"],
-          ["UD Ibiza", "Real Murcia"],
-          ["Betis Deportivo", "CF Intercity"],
-          ["Algeciras CF", "Hércules"],
-          ["Villarreal B", "Sevilla At"],
-          ["Alcorcón", "AD Mérida"],
-          ["Fuenlabrada", "Alcoyano"],
-          ["Recreativo", "Yeclano Deportivo"],
-          ["Marbella FC", "Atlético Sanluqueño"]
+          ["Atlético B", "Alcorcón"],
+          ["Real Murcia", "CF Intercity"],
+          ["RM Castilla", "Alcoyano"],
+          ["Hércules", "Atlético Sanluqueño"],
+          ["Algeciras CF", "Recreativo"],
+          ["Betis Deportivo", "Marbella FC"],
+          ["Villarreal B", "Fuenlabrada"],
+          ["Sevilla At", "Yeclano Deportivo"],
+          ["UD Ibiza", "AD Ceuta FC"],
+          ["Antequera CF", "AD Mérida"]
         ]
       },
       {
         nombre: "Jornada 36",
         partidos: [
-          ["Atlético B", "Antequera CF"],
-          ["RM Castilla", "Betis Deportivo"],
-          ["Real Murcia", "AD Ceuta FC"],
-          ["Hércules", "UD Ibiza"],
-          ["CF Intercity", "Villarreal B"],
-          ["Sevilla At", "Algeciras CF"],
-          ["AD Mérida", "Alcorcón"],
-          ["Alcoyano", "Recreativo"],
-          ["Yeclano Deportivo", "Fuenlabrada"],
-          ["Atlético Sanluqueño", "Marbella FC"]
+          ["Atlético B", "Recreativo"],
+          ["Real Murcia", "Alcoyano"],
+          ["RM Castilla", "Atlético Sanluqueño"],
+          ["Hércules", "CF Intercity"],
+          ["Algeciras CF", "Betis Deportivo"],
+          ["Marbella FC", "Villarreal B"],
+          ["Fuenlabrada", "Sevilla At"],
+          ["Yeclano Deportivo", "AD Ceuta FC"],
+          ["UD Ibiza", "Antequera CF"],
+          ["Alcorcón", "AD Mérida"]
         ]
       },
       {
         nombre: "Jornada 37",
         partidos: [
-          ["AD Ceuta FC", "RM Castilla"],
-          ["Antequera CF", "Atlético B"],
-          ["UD Ibiza", "Real Murcia"],
-          ["Betis Deportivo", "CF Intercity"],
-          ["Algeciras CF", "Sevilla At"],
-          ["Villarreal B", "Hércules"],
-          ["Alcorcón", "AD Mérida"],
-          ["Fuenlabrada", "Yeclano Deportivo"],
-          ["Recreativo", "Alcoyano"],
-          ["Marbella FC", "Atlético Sanluqueño"]
+          ["Atlético B", "Fuenlabrada"],
+          ["Real Murcia", "Atlético Sanluqueño"],
+          ["RM Castilla", "Algeciras CF"],
+          ["Hércules", "Villarreal B"],
+          ["Alcoyano", "AD Ceuta FC"],
+          ["Betis Deportivo", "UD Ibiza"],
+          ["Marbella FC", "Antequera CF"],
+          ["Recreativo", "AD Mérida"],
+          ["Sevilla At", "CF Intercity"],
+          ["Yeclano Deportivo", "Alcorcón"]
         ]
       },
       {
         nombre: "Jornada 38",
         partidos: [
-          ["Atlético B", "AD Ceuta FC"],
-          ["RM Castilla", "Antequera CF"],
-          ["Real Murcia", "UD Ibiza"],
-          ["Hércules", "Algeciras CF"],
-          ["CF Intercity", "Betis Deportivo"],
-          ["Sevilla At", "Villarreal B"],
-          ["AD Mérida", "Alcorcón"],
-          ["Alcoyano", "Fuenlabrada"],
-          ["Yeclano Deportivo", "Recreativo"],
-          ["Atlético Sanluqueño", "Marbella FC"]
+          ["Atlético B", "Atlético Sanluqueño"],
+          ["Real Murcia", "Betis Deportivo"],
+          ["RM Castilla", "Marbella FC"],
+          ["Hércules", "Alcorcón"],
+          ["Alcoyano", "Sevilla At"],
+          ["CF Intercity", "Yeclano Deportivo"],
+          ["Algeciras CF", "Antequera CF"],
+          ["AD Ceuta FC", "AD Mérida"],
+          ["Villarreal B", "Recreativo"],
+          ["UD Ibiza", "Marbella FC"]
         ]
       }
     ];
@@ -274,6 +274,8 @@
       const selects = document.querySelectorAll("select");
       selects.forEach(select => {
         const valor = select.value;
+        if (!valor) return;
+
         const local = select.getAttribute("data-local");
         const visitante = select.getAttribute("data-visitante");
 
@@ -281,46 +283,33 @@
           puntos[local] += 3;
         } else if (valor === visitante) {
           puntos[visitante] += 3;
-        } else if (valor === "empate") {
+        } else {
           puntos[local] += 1;
           puntos[visitante] += 1;
         }
       });
 
-      const tabla = Object.entries(puntos).sort((a, b) => b[1] - a[1]);
+      const tabla = Object.entries(puntos)
+        .sort((a, b) => b[1] - a[1])
+        .map(([equipo, pts], index) => {
+          let clase = "";
+          if (index === 0) clase = "destacado-azul";
+          else if (index < 5) clase = "destacado-verde";
+          else if (index > 15) clase = "destacado-rojo";
+          return `
+            <tr class="${clase}">
+              <td>${index + 1}</td>
+              <td>${equipo}</td>
+              <td>${pts}</td>
+            </tr>
+          `;
+        }).join("");
 
-      const cuerpoTabla = document.getElementById("tabla-cuerpo");
-      cuerpoTabla.innerHTML = "";
-
-      tabla.forEach(([equipo, puntos], index) => {
-        const tr = document.createElement("tr");
-        const tdPos = document.createElement("td");
-        tdPos.textContent = index + 1;
-        const tdEquipo = document.createElement("td");
-        tdEquipo.textContent = equipo;
-        const tdPuntos = document.createElement("td");
-        tdPuntos.textContent = puntos;
-
-        tr.appendChild(tdPos);
-        tr.appendChild(tdEquipo);
-        tr.appendChild(tdPuntos);
-
-        // Colorear según la posición
-        if (index === 0) {
-          tr.classList.add("destacado-azul");
-        } else if (index >= 1 && index <= 4) {
-          tr.classList.add("destacado-verde");
-        } else if (index >= 16 && index <= 19) {
-          tr.classList.add("destacado-rojo");
-        }
-
-        cuerpoTabla.appendChild(tr);
-      });
+      document.getElementById("tabla-cuerpo").innerHTML = tabla;
     }
 
-    // Inicializar la página
     crearJornadas();
-    calcularTabla();
   </script>
+
 </body>
 </html>
