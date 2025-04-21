@@ -54,11 +54,11 @@
       padding: 15px;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      height: fit-content;
-      max-height: 80vh;
+      height: 100%;  /* Ajustamos la altura para que ocupe todo el espacio disponible */
+      max-height: none;
       position: sticky;
       top: 20px;
-      overflow-y: auto;
+      overflow-y: auto; /* Permite que el contenido se mueva solo si es necesario */
     }
 
     table {
@@ -269,39 +269,52 @@
     }
 
     function calcularTabla() {
-      const puntos = { ...puntosIniciales };
+      const tabla = document.getElementById("tabla-cuerpo");
 
-      const selects = document.querySelectorAll("select");
-      selects.forEach(select => {
-        const valor = select.value;
-        if (!valor) return;
+      const equipos = Object.keys(puntosIniciales).map(equipo => ({
+        equipo,
+        puntos: puntosIniciales[equipo]
+      }));
 
-        const local = select.getAttribute("data-local");
-        const visitante = select.getAttribute("data-visitante");
-
-        if (valor === "empate") {
-          puntos[local] += 1;
-          puntos[visitante] += 1;
-        } else {
-          puntos[valor] += 3;
-        }
+      // Iteramos sobre las jornadas y partidos
+      jornadas.forEach((jornada, index) => {
+        jornada.partidos.forEach((partido, i) => {
+          const select = document.getElementById(`partido-${index}-${i}`);
+          if (select && select.value) {
+            const resultado = select.value;
+            if (resultado === partido[0]) {
+              // El equipo local gana
+              puntosIniciales[partido[0]] += 3;
+            } else if (resultado === partido[1]) {
+              // El equipo visitante gana
+              puntosIniciales[partido[1]] += 3;
+            } else if (resultado === "empate") {
+              // Empate
+              puntosIniciales[partido[0]] += 1;
+              puntosIniciales[partido[1]] += 1;
+            }
+          }
+        });
       });
 
-      const clasificacion = Object.entries(puntos).sort((a, b) => b[1] - a[1]);
+      // Ordenamos la clasificación por puntos
+      equipos.sort((a, b) => b.puntos - a.puntos);
 
-      const cuerpo = document.getElementById("tabla-cuerpo");
-      cuerpo.innerHTML = "";
+      // Vaciamos la tabla
+      tabla.innerHTML = "";
 
-      clasificacion.forEach(([equipo, pts], index) => {
+      // Creamos las filas para la tabla
+      equipos.forEach((equipo, index) => {
         const tr = document.createElement("tr");
+
         const tdPos = document.createElement("td");
         tdPos.textContent = index + 1;
 
         const tdEquipo = document.createElement("td");
-        tdEquipo.textContent = equipo;
+        tdEquipo.textContent = equipo.equipo;
 
         const tdPts = document.createElement("td");
-        tdPts.textContent = pts;
+        tdPts.textContent = equipo.puntos;
 
         if (index === 0) tdPos.classList.add("destacado-azul");
         else if (index <= 4) tdPos.classList.add("destacado-verde");
@@ -310,7 +323,7 @@
         tr.appendChild(tdPos);
         tr.appendChild(tdEquipo);
         tr.appendChild(tdPts);
-        cuerpo.appendChild(tr);
+        tabla.appendChild(tr);
       });
     }
 
