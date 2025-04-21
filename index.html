@@ -51,14 +51,15 @@
     .clasificacion {
       flex: 1;
       background-color: #ffffff;
-      padding: 15px;
+      padding: 10px;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      height: 100%;  /* Ajustamos la altura para que ocupe todo el espacio disponible */
+      height: 100%;
       max-height: none;
       position: sticky;
       top: 20px;
-      overflow-y: auto; /* Permite que el contenido se mueva solo si es necesario */
+      overflow-y: auto;
+      font-size: 0.8em;  /* Tamaño de fuente más pequeño */
     }
 
     table {
@@ -69,7 +70,7 @@
 
     th, td {
       border: 1px solid #ccc;
-      padding: 6px;
+      padding: 4px;  /* Menos padding para hacer la tabla más compacta */
       text-align: center;
     }
 
@@ -258,8 +259,6 @@
           select.appendChild(new Option("Empate", "empate"));
           select.appendChild(new Option(`${partido[1]} gana`, partido[1]));
 
-          select.addEventListener("change", calcularTabla);
-
           label.appendChild(select);
           div.appendChild(label);
         });
@@ -276,20 +275,16 @@
         puntos: puntosIniciales[equipo]
       }));
 
-      // Iteramos sobre las jornadas y partidos
       jornadas.forEach((jornada, index) => {
         jornada.partidos.forEach((partido, i) => {
           const select = document.getElementById(`partido-${index}-${i}`);
           if (select && select.value) {
             const resultado = select.value;
             if (resultado === partido[0]) {
-              // El equipo local gana
               puntosIniciales[partido[0]] += 3;
             } else if (resultado === partido[1]) {
-              // El equipo visitante gana
               puntosIniciales[partido[1]] += 3;
             } else if (resultado === "empate") {
-              // Empate
               puntosIniciales[partido[0]] += 1;
               puntosIniciales[partido[1]] += 1;
             }
@@ -297,13 +292,10 @@
         });
       });
 
-      // Ordenamos la clasificación por puntos
       equipos.sort((a, b) => b.puntos - a.puntos);
 
-      // Vaciamos la tabla
       tabla.innerHTML = "";
 
-      // Creamos las filas para la tabla
       equipos.forEach((equipo, index) => {
         const tr = document.createElement("tr");
 
@@ -327,10 +319,9 @@
       });
     }
 
-    // Cargar la página con los puntos base y jornadas
     crearJornadas();
     calcularTabla();
   </script>
-
 </body>
 </html>
+
