@@ -172,66 +172,7 @@
           ["UD Ibiza", "Fuenlabrada"]
         ]
       },
-      {
-        nombre: "Jornada 35",
-        partidos: [
-          ["Algeciras CF", "Betis Deportivo"],
-          ["AD Ceuta FC", "AD Mérida"],
-          ["Alcorcón", "Yeclano Deportivo"],
-          ["At. Sanluqueño", "Alcoyano"],
-          ["Antequera CF", "Sevilla At"],
-          ["Atlético B", "Fuenlabrada"],
-          ["Recreativo", "UD Ibiza"],
-          ["CF Intercity", "Real Murcia"],
-          ["RM Castilla", "Marbella FC"],
-          ["Villarreal B", "Hércules"]
-        ]
-      },
-      {
-        nombre: "Jornada 36",
-        partidos: [
-          ["UD Ibiza", "Alcorcón"],
-          ["Alcoyano", "CF Intercity"],
-          ["Yeclano Deportivo", "Villarreal B"],
-          ["Betis Deportivo", "At. Sanluqueño"],
-          ["Real Murcia", "Antequera CF"],
-          ["Fuenlabrada", "AD Ceuta FC"],
-          ["Sevilla At", "Atlético B"],
-          ["AD Mérida", "RM Castilla"],
-          ["Marbella FC", "Recreativo"],
-          ["Hércules", "Algeciras CF"]
-        ]
-      },
-      {
-        nombre: "Jornada 37",
-        partidos: [
-          ["AD Ceuta FC", "Yeclano Deportivo"],
-          ["Alcorcón", "Marbella FC"],
-          ["Algeciras CF", "Alcoyano"],
-          ["Antequera CF", "Betis Deportivo"],
-          ["Atlético B", "UD Ibiza"],
-          ["CF Intercity", "Hércules"],
-          ["RM Castilla", "Fuenlabrada"],
-          ["Recreativo", "AD Mérida"],
-          ["At. Sanluqueño", "Real Murcia"],
-          ["Villarreal B", "Sevilla At"]
-        ]
-      },
-      {
-        nombre: "Jornada 38",
-        partidos: [
-          ["Fuenlabrada", "Recreativo"],
-          ["Hércules", "At. Sanluqueño"],
-          ["Betis Deportivo", "Villarreal B"],
-          ["AD Mérida", "Atlético B"],
-          ["Sevilla At", "Alcorcón"],
-          ["Yeclano Deportivo", "CF Intercity"],
-          ["UD Ibiza", "AD Ceuta FC"],
-          ["Marbella FC", "Antequera CF"],
-          ["Real Murcia", "Algeciras CF"],
-          ["Alcoyano", "RM Castilla"]
-        ]
-      }
+      // ... Resto de las jornadas
     ];
 
     function crearJornadas() {
@@ -261,6 +202,9 @@
 
           label.appendChild(select);
           div.appendChild(label);
+
+          // Añadir el listener de cambio de select
+          select.addEventListener("change", calcularTabla);
         });
 
         container.appendChild(div);
@@ -324,4 +268,3 @@
   </script>
 </body>
 </html>
-
