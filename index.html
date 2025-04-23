@@ -59,7 +59,7 @@
       position: sticky;
       top: 20px;
       overflow-y: auto;
-      font-size: 0.8em;  /* Tamaño de fuente más pequeño */
+      font-size: 0.8em;
     }
 
     table {
@@ -70,7 +70,7 @@
 
     th, td {
       border: 1px solid #ccc;
-      padding: 4px;  /* Menos padding para hacer la tabla más compacta */
+      padding: 4px;
       text-align: center;
     }
 
@@ -171,8 +171,7 @@
           ["Hércules", "Alcorcón"],
           ["UD Ibiza", "Fuenlabrada"]
         ]
-      },
-      // ... Resto de las jornadas
+      }
     ];
 
     function crearJornadas() {
@@ -203,7 +202,6 @@
           label.appendChild(select);
           div.appendChild(label);
 
-          // Añadir el listener de cambio de select
           select.addEventListener("change", calcularTabla);
         });
 
@@ -214,10 +212,8 @@
     function calcularTabla() {
       const tabla = document.getElementById("tabla-cuerpo");
 
-      const equipos = Object.keys(puntosIniciales).map(equipo => ({
-        equipo,
-        puntos: puntosIniciales[equipo]
-      }));
+      // Clonar los puntos para no modificar los originales
+      const puntosTemp = { ...puntosIniciales };
 
       jornadas.forEach((jornada, index) => {
         jornada.partidos.forEach((partido, i) => {
@@ -225,16 +221,21 @@
           if (select && select.value) {
             const resultado = select.value;
             if (resultado === partido[0]) {
-              puntosIniciales[partido[0]] += 3;
+              puntosTemp[partido[0]] += 3;
             } else if (resultado === partido[1]) {
-              puntosIniciales[partido[1]] += 3;
+              puntosTemp[partido[1]] += 3;
             } else if (resultado === "empate") {
-              puntosIniciales[partido[0]] += 1;
-              puntosIniciales[partido[1]] += 1;
+              puntosTemp[partido[0]] += 1;
+              puntosTemp[partido[1]] += 1;
             }
           }
         });
       });
+
+      const equipos = Object.keys(puntosTemp).map(equipo => ({
+        equipo,
+        puntos: puntosTemp[equipo]
+      }));
 
       equipos.sort((a, b) => b.puntos - a.puntos);
 
