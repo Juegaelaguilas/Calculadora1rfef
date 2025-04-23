@@ -158,6 +158,7 @@
   </div>
 
   <script>
+    // Puntos iniciales de cada equipo
     const puntosIniciales = {
       "AD Ceuta FC": 57,
       "Real Murcia": 53,
@@ -183,6 +184,7 @@
 
     let resultadosPrevios = {};
 
+    // Datos de las jornadas
     const jornadas = [
       {
         nombre: "Jornada 34",
@@ -217,6 +219,7 @@
       // Resto de jornadas...
     ];
 
+    // Función para crear las jornadas y los partidos
     function crearJornadas() {
       const container = document.getElementById("partidos-container");
 
@@ -256,7 +259,7 @@
               }
             }
 
-            // Aplicar el nuevo resultado
+            // Procesar el nuevo resultado
             const resultado = select.value;
             if (resultado === partido[0]) {
               puntosIniciales[partido[0]] += 3;
@@ -270,7 +273,6 @@
             // Guardar el nuevo resultado
             resultadosPrevios[`${index}-${partidoIndex}`] = select.value;
 
-            actualizarPuntos();
             mostrarClasificacion(puntosIniciales);
           });
 
@@ -282,24 +284,7 @@
       });
     }
 
-    function actualizarPuntos() {
-      const selects = document.querySelectorAll("select");
-
-      selects.forEach((select, index) => {
-        const partido = jornadas[Math.floor(index / 10)].partidos[index % 10];
-        const resultado = select.value;
-
-        if (resultado === partido[0]) {
-          puntosIniciales[partido[0]] += 3;
-        } else if (resultado === partido[1]) {
-          puntosIniciales[partido[1]] += 3;
-        } else if (resultado === "empate") {
-          puntosIniciales[partido[0]] += 1;
-          puntosIniciales[partido[1]] += 1;
-        }
-      });
-    }
-
+    // Función para mostrar la clasificación
     function mostrarClasificacion(puntos) {
       const tablaCuerpo = document.getElementById("tabla-cuerpo");
       const equipos = Object.keys(puntos);
@@ -316,7 +301,8 @@
         tdEquipo.textContent = equipo;
         const tdPts = document.createElement("td");
         tdPts.textContent = puntos[equipo];
-        
+
+        // Colorear según la posición
         if (index === 0) {
           tdPos.classList.add("destacado-azul");
         } else if (index >= 1 && index <= 4) {
