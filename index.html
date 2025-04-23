@@ -276,10 +276,11 @@
           const select = document.createElement("select");
           select.innerHTML = `
             <option value="">Selecciona resultado</option>
-            <option value="victoria">Victoria</option>
+            <option value="${partido[0]}">${partido[0]}</option>
+            <option value="${partido[1]}">${partido[1]}</option>
             <option value="empate">Empate</option>
-            <option value="derrota">Derrota</option>
           `;
+
           select.addEventListener("change", () => {
             actualizarPuntos();
             mostrarClasificacion(puntosIniciales);
@@ -300,13 +301,13 @@
         const partido = jornadas[Math.floor(index / 10)].partidos[index % 10];
         const resultado = select.value;
 
-        if (resultado === "victoria") {
+        if (resultado === partido[0]) {
           puntosIniciales[partido[0]] += 3;
+        } else if (resultado === partido[1]) {
+          puntosIniciales[partido[1]] += 3;
         } else if (resultado === "empate") {
           puntosIniciales[partido[0]] += 1;
           puntosIniciales[partido[1]] += 1;
-        } else if (resultado === "derrota") {
-          puntosIniciales[partido[1]] += 3;
         }
       });
     }
@@ -346,7 +347,7 @@
 
     // Inicializar la página
     crearJornadas();
-    mostrarClasificacion(puntosIniciales); // Mostrar clasificación al inicio
+    mostrarClasificacion(puntosIniciales);
   </script>
 
 </body>
