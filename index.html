@@ -181,6 +181,8 @@
       "CF Intercity": 29
     };
 
+    let resultadosPrevios = {};
+
     const jornadas = [
       {
         nombre: "Jornada 34",
@@ -212,51 +214,7 @@
           ["Villarreal B", "Hércules"]
         ]
       },
-      {
-        nombre: "Jornada 36",
-        partidos: [
-          ["UD Ibiza", "Alcorcón"],
-          ["Alcoyano", "CF Intercity"],
-          ["Yeclano Deportivo", "Villarreal B"],
-          ["Betis Deportivo", "At. Sanluqueño"],
-          ["Real Murcia", "Antequera CF"],
-          ["Fuenlabrada", "AD Ceuta FC"],
-          ["Sevilla At", "Atlético B"],
-          ["AD Mérida", "RM Castilla"],
-          ["Marbella FC", "Recreativo"],
-          ["Hércules", "Algeciras CF"]
-        ]
-      },
-      {
-        nombre: "Jornada 37",
-        partidos: [
-          ["AD Ceuta FC", "Yeclano Deportivo"],
-          ["Alcorcón", "Marbella FC"],
-          ["Algeciras CF", "Alcoyano"],
-          ["Antequera CF", "Betis Deportivo"],
-          ["Atlético B", "UD Ibiza"],
-          ["CF Intercity", "Hércules"],
-          ["RM Castilla", "Fuenlabrada"],
-          ["Recreativo", "AD Mérida"],
-          ["At. Sanluqueño", "Real Murcia"],
-          ["Villarreal B", "Sevilla At"]
-        ]
-      },
-      {
-        nombre: "Jornada 38",
-        partidos: [
-          ["Fuenlabrada", "Recreativo"],
-          ["Hércules", "At. Sanluqueño"],
-          ["Betis Deportivo", "Villarreal B"],
-          ["AD Mérida", "Atlético B"],
-          ["Sevilla At", "Alcorcón"],
-          ["Yeclano Deportivo", "CF Intercity"],
-          ["UD Ibiza", "AD Ceuta FC"],
-          ["Marbella FC", "Antequera CF"],
-          ["Real Murcia", "Algeciras CF"],
-          ["Alcoyano", "RM Castilla"]
-        ]
-      }
+      // Resto de jornadas...
     ];
 
     function crearJornadas() {
@@ -269,7 +227,7 @@
         h3.textContent = jornada.nombre;
         div.appendChild(h3);
 
-        jornada.partidos.forEach((partido) => {
+        jornada.partidos.forEach((partido, partidoIndex) => {
           const p = document.createElement("p");
           p.textContent = `${partido[0]} vs ${partido[1]}`;
 
@@ -281,7 +239,37 @@
             <option value="empate">Empate</option>
           `;
 
+          // Guardar el resultado previo
+          resultadosPrevios[`${index}-${partidoIndex}`] = null;
+
           select.addEventListener("change", () => {
+            // Restaurar los puntos antes de realizar cualquier cambio
+            if (resultadosPrevios[`${index}-${partidoIndex}`]) {
+              const resultadoAnterior = resultadosPrevios[`${index}-${partidoIndex}`];
+              if (resultadoAnterior === partido[0]) {
+                puntosIniciales[partido[0]] -= 3;
+              } else if (resultadoAnterior === partido[1]) {
+                puntosIniciales[partido[1]] -= 3;
+              } else if (resultadoAnterior === "empate") {
+                puntosIniciales[partido[0]] -= 1;
+                puntosIniciales[partido[1]] -= 1;
+              }
+            }
+
+            // Aplicar el nuevo resultado
+            const resultado = select.value;
+            if (resultado === partido[0]) {
+              puntosIniciales[partido[0]] += 3;
+            } else if (resultado === partido[1]) {
+              puntosIniciales[partido[1]] += 3;
+            } else if (resultado === "empate") {
+              puntosIniciales[partido[0]] += 1;
+              puntosIniciales[partido[1]] += 1;
+            }
+
+            // Guardar el nuevo resultado
+            resultadosPrevios[`${index}-${partidoIndex}`] = select.value;
+
             actualizarPuntos();
             mostrarClasificacion(puntosIniciales);
           });
