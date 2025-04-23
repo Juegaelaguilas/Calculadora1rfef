@@ -1,43 +1,267 @@
-.clasificacion {
-  width: 360px; /* Más ancho */
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  height: auto;
-  max-height: 95vh;
-  overflow-y: hidden; /* Sin scroll */
-  font-size: 0.85em; /* Texto ligeramente más pequeño */
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clasificación 1ª RFEF</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      background-color: #f8f9fa;
+    }
 
-.clasificacion table th,
-.clasificacion table td {
-  font-size: 0.9em;
-  padding: 6px;
-}
+    .jornadas {
+      flex: 1;
+      padding: 20px;
+    }
 
-.leyenda {
-  margin-top: 15px;
-  font-size: 0.85em;
-  background-color: #f4f4f4;
-  padding: 10px;
-  border-radius: 8px;
-}
+    .jornada {
+      margin-bottom: 30px;
+    }
 
-.leyenda p {
-  display: flex;
-  align-items: center;
-  margin: 5px 0;
-}
+    .jornada h2 {
+      font-size: 1.4em;
+      margin-bottom: 10px;
+    }
 
-.leyenda span {
-  display: inline-block;
-  width: 20px;
-  height: 12px;
-  margin-right: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
+    .partido {
+      margin-bottom: 10px;
+    }
+
+    .partido select {
+      margin-left: 10px;
+    }
+
+    .clasificacion {
+      width: 360px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      height: auto;
+      max-height: 95vh;
+      overflow-y: hidden;
+      font-size: 0.85em;
+    }
+
+    .clasificacion table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .clasificacion th, .clasificacion td {
+      border: 1px solid black;
+      padding: 6px;
+      text-align: left;
+    }
+
+    .posicion-1 {
+      background-color: #add8e6;
+      font-weight: bold;
+    }
+    .posicion-verde {
+      background-color: #90ee90;
+      font-weight: bold;
+    }
+    .posicion-roja {
+      background-color: #f08080;
+      font-weight: bold;
+    }
+
+    .leyenda {
+      margin-top: 15px;
+      font-size: 0.85em;
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .leyenda p {
+      display: flex;
+      align-items: center;
+      margin: 5px 0;
+    }
+
+    .leyenda span {
+      display: inline-block;
+      width: 20px;
+      height: 12px;
+      margin-right: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="jornadas" id="jornadas"></div>
+
+  <div class="clasificacion">
+    <h2>Clasificación</h2>
+    <div id="tabla-clasificacion"></div>
+    <div class="leyenda">
+      <p><span style="background-color: #add8e6;"></span>1º puesto</p>
+      <p><span style="background-color: #90ee90;"></span>2º al 5º puesto</p>
+      <p><span style="background-color: #f08080;"></span>16º al 20º puesto</p>
+    </div>
+  </div>
+
+  <script>
+    const equipos = [
+      "Marbella FC", "Atlético B", "At. Sanluqueño", "CF Intercity", "Alcoyano",
+      "Recreativo", "Yeclano Deportivo", "Algeciras CF", "RM Castilla", "AD Ceuta FC",
+      "Sevilla At", "Betis Deportivo", "AD Mérida", "Antequera CF", "Real Murcia",
+      "Villarreal B", "Hércules", "Alcorcón", "UD Ibiza", "Fuenlabrada"
+    ];
+
+    let clasificacion = equipos.map(equipo => ({ nombre: equipo, puntos: 0 }));
+    let resultadosPrevios = {};
+
+    const jornadas = [
+      {
+        nombre: "Jornada 34",
+        partidos: [
+          ["Marbella FC", "Atlético B"], ["At. Sanluqueño", "CF Intercity"],
+          ["Alcoyano", "Recreativo"], ["Yeclano Deportivo", "Algeciras CF"],
+          ["RM Castilla", "AD Ceuta FC"], ["Sevilla At", "Betis Deportivo"],
+          ["AD Mérida", "Antequera CF"], ["Real Murcia", "Villarreal B"],
+          ["Hércules", "Alcorcón"], ["UD Ibiza", "Fuenlabrada"]
+        ]
+      },
+      {
+        nombre: "Jornada 35",
+        partidos: [
+          ["Algeciras CF", "Betis Deportivo"], ["AD Ceuta FC", "AD Mérida"],
+          ["Alcorcón", "Yeclano Deportivo"], ["At. Sanluqueño", "Alcoyano"],
+          ["Antequera CF", "Sevilla At"], ["Atlético B", "Fuenlabrada"],
+          ["Recreativo", "UD Ibiza"], ["CF Intercity", "Real Murcia"],
+          ["RM Castilla", "Marbella FC"], ["Villarreal B", "Hércules"]
+        ]
+      },
+      {
+        nombre: "Jornada 36",
+        partidos: [
+          ["UD Ibiza", "Alcorcón"], ["Alcoyano", "CF Intercity"],
+          ["Yeclano Deportivo", "Villarreal B"], ["Betis Deportivo", "At. Sanluqueño"],
+          ["Real Murcia", "Antequera CF"], ["Fuenlabrada", "AD Ceuta FC"],
+          ["Sevilla At", "Atlético B"], ["AD Mérida", "RM Castilla"],
+          ["Marbella FC", "Recreativo"], ["Hércules", "Algeciras CF"]
+        ]
+      },
+      {
+        nombre: "Jornada 37",
+        partidos: [
+          ["AD Ceuta FC", "Yeclano Deportivo"], ["Alcorcón", "Marbella FC"],
+          ["Algeciras CF", "Alcoyano"], ["Antequera CF", "Betis Deportivo"],
+          ["Atlético B", "UD Ibiza"], ["CF Intercity", "Hércules"],
+          ["RM Castilla", "Fuenlabrada"], ["Recreativo", "AD Mérida"],
+          ["At. Sanluqueño", "Real Murcia"], ["Villarreal B", "Sevilla At"]
+        ]
+      },
+      {
+        nombre: "Jornada 38",
+        partidos: [
+          ["Fuenlabrada", "Recreativo"], ["Hércules", "At. Sanluqueño"],
+          ["Betis Deportivo", "Villarreal B"], ["AD Mérida", "Atlético B"],
+          ["Sevilla At", "Alcorcón"], ["Yeclano Deportivo", "CF Intercity"],
+          ["UD Ibiza", "AD Ceuta FC"], ["Marbella FC", "Antequera CF"],
+          ["Real Murcia", "Algeciras CF"], ["Alcoyano", "RM Castilla"]
+        ]
+      }
+    ];
+
+    function renderJornadas() {
+      const container = document.getElementById("jornadas");
+      jornadas.forEach((jornada, jIndex) => {
+        const jornadaDiv = document.createElement("div");
+        jornadaDiv.className = "jornada";
+
+        const titulo = document.createElement("h2");
+        titulo.textContent = jornada.nombre;
+        jornadaDiv.appendChild(titulo);
+
+        jornada.partidos.forEach((partido, pIndex) => {
+          const div = document.createElement("div");
+          div.className = "partido";
+          const select = document.createElement("select");
+          const key = `${jIndex}-${pIndex}`;
+
+          ["Selecciona resultado", partido[0], "Empate", partido[1]].forEach(op => {
+            const option = document.createElement("option");
+            option.value = op;
+            option.text = op;
+            select.appendChild(option);
+          });
+
+          select.addEventListener("change", () => {
+            actualizarResultado(key, partido, select.value);
+          });
+
+          div.textContent = `${partido[0]} vs ${partido[1]}`;
+          div.appendChild(select);
+          jornadaDiv.appendChild(div);
+        });
+
+        container.appendChild(jornadaDiv);
+      });
+    }
+
+    function actualizarResultado(key, partido, seleccion) {
+      // Revertir puntuación anterior si existía
+      if (resultadosPrevios[key]) {
+        const [local, visitante, resultadoAnterior] = resultadosPrevios[key];
+        if (resultadoAnterior === "Empate") {
+          clasificacion.find(e => e.nombre === local).puntos -= 1;
+          clasificacion.find(e => e.nombre === visitante).puntos -= 1;
+        } else {
+          clasificacion.find(e => e.nombre === resultadoAnterior).puntos -= 3;
+        }
+      }
+
+      // Aplicar nueva puntuación
+      if (seleccion === partido[0]) {
+        clasificacion.find(e => e.nombre === seleccion).puntos += 3;
+        resultadosPrevios[key] = [partido[0], partido[1], seleccion];
+      } else if (seleccion === partido[1]) {
+        clasificacion.find(e => e.nombre === seleccion).puntos += 3;
+        resultadosPrevios[key] = [partido[0], partido[1], seleccion];
+      } else if (seleccion === "Empate") {
+        clasificacion.find(e => e.nombre === partido[0]).puntos += 1;
+        clasificacion.find(e => e.nombre === partido[1]).puntos += 1;
+        resultadosPrevios[key] = [partido[0], partido[1], "Empate"];
+      } else {
+        delete resultadosPrevios[key];
+      }
+
+      renderClasificacion();
+    }
+
+    function renderClasificacion() {
+      const contenedor = document.getElementById("tabla-clasificacion");
+      contenedor.innerHTML = "";
+
+      let tabla = `<table><tr><th>Pos</th><th>Equipo</th><th>Pts</th></tr>`;
+      clasificacion.sort((a, b) => b.puntos - a.puntos);
+      clasificacion.forEach((equipo, index) => {
+        let clase = "";
+        if (index === 0) clase = "posicion-1";
+        else if (index >= 1 && index <= 4) clase = "posicion-verde";
+        else if (index >= 15) clase = "posicion-roja";
+        tabla += `<tr class="${clase}"><td>${index + 1}</td><td>${equipo.nombre}</td><td>${equipo.puntos}</td></tr>`;
+      });
+      tabla += `</table>`;
+
+      contenedor.innerHTML = tabla;
+    }
+
+    renderJornadas();
+    renderClasificacion();
+  </script>
+</body>
+</html>
