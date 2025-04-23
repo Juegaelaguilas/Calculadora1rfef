@@ -16,7 +16,7 @@
       padding: 20px;
       overflow-y: scroll;
       height: 100vh;
-      font-size: 20px;
+      font-size: 22px;
     }
     .clasificacion {
       width: 35%;
@@ -31,34 +31,43 @@
     }
     th, td {
       border: 2px solid #000;
-      padding: 6px;
+      padding: 8px;
       text-align: left;
-      font-size: 14px;
+      font-size: 18px;
     }
     th {
       background-color: #ddd;
     }
     .pos-1 {
-      color: blue;
+      background-color: #add8e6;
       font-weight: bold;
     }
     .pos-2-5 {
-      color: green;
+      background-color: #90ee90;
       font-weight: bold;
     }
     .pos-16-20 {
-      color: red;
+      background-color: #f08080;
       font-weight: bold;
     }
     select {
       margin-top: 5px;
+      font-size: 20px;
+      width: 100%;
     }
     h2 {
-      font-size: 24px;
+      font-size: 28px;
     }
     .leyenda {
       margin-top: 20px;
-      font-size: 14px;
+      font-size: 18px;
+    }
+    .leyenda span {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 10px;
     }
   </style>
 </head>
@@ -68,21 +77,15 @@
     <h2>Clasificación</h2>
     <table id="tabla-clasificacion"></table>
     <div class="leyenda">
-      <p><span class="pos-1">Azul</span>: 1º Clasificado</p>
-      <p><span class="pos-2-5">Verde</span>: 2º al 5º</p>
-      <p><span class="pos-16-20">Rojo</span>: Puestos de descenso (16º al 20º)</p>
+      <p><span class="pos-1"></span>1º Clasificado</p>
+      <p><span class="pos-2-5"></span>2º al 5º</p>
+      <p><span class="pos-16-20"></span>Puestos de descenso (16º al 20º)</p>
     </div>
   </div>
-  <script>
-    const equipos = [
-      "AD Ceuta FC", "Real Murcia", "Antequera CF", "UD Ibiza", "AD Mérida",
-      "Atlético B", "Sevilla At", "RM Castilla", "Alcorcón", "Hércules",
-      "Algeciras CF", "Betis Deportivo", "Villarreal B", "Fuenlabrada",
-      "Yeclano Deportivo", "Marbella FC", "At. Sanluqueño", "Recreativo",
-      "Alcoyano", "CF Intercity"
-    ];
 
-    const puntosBase = {
+  <script>
+    // Puntos base de los equipos
+    const equipos = {
       "AD Ceuta FC": 57,
       "Real Murcia": 53,
       "Antequera CF": 53,
@@ -105,130 +108,168 @@
       "CF Intercity": 29
     };
 
-    let puntos = {};
-    let partidosSeleccionados = {};
-
-    function inicializarPuntos() {
-      puntos = {...puntosBase};
-    }
-
-    function actualizarClasificacion() {
-      const tabla = document.getElementById("tabla-clasificacion");
-      tabla.innerHTML = "<tr><th>Pos</th><th>Equipo</th><th>Puntos</th></tr>";
-      const clasificacion = Object.entries(puntos)
-        .sort((a, b) => b[1] - a[1])
-        .map((item, index) => {
-          let clase = "";
-          if (index === 0) clase = "pos-1";
-          else if (index >= 1 && index <= 4) clase = "pos-2-5";
-          else if (index >= 15) clase = "pos-16-20";
-          return `<tr><td class="${clase}">${index + 1}</td><td>${item[0]}</td><td class="${clase}">${item[1]}</td></tr>`;
-        }).join("");
-      tabla.innerHTML += clasificacion;
-    }
-
-    function crearJornadas() {
-      const contenedor = document.getElementById("jornadas");
-      jornadas.forEach((jornada, indexJ) => {
-        const div = document.createElement("div");
-        div.innerHTML = `<h2>${jornada.nombre}</h2>`;
-        jornada.partidos.forEach((partido, indexP) => {
-          const id = `${indexJ}-${indexP}`;
-          const select = document.createElement("select");
-          select.innerHTML = `
-            <option value="">Selecciona resultado</option>
-            <option value="${partido[0]}">${partido[0]}</option>
-            <option value="empate">Empate</option>
-            <option value="${partido[1]}">${partido[1]}</option>
-          `;
-          select.addEventListener("change", () => {
-            if (partidosSeleccionados[id]) {
-              const resultadoAnterior = partidosSeleccionados[id];
-              if (resultadoAnterior === "empate") {
-                puntos[partido[0]] -= 1;
-                puntos[partido[1]] -= 1;
-              } else {
-                puntos[resultadoAnterior] -= 3;
-              }
-            }
-            const seleccion = select.value;
-            if (seleccion === "empate") {
-              puntos[partido[0]] += 1;
-              puntos[partido[1]] += 1;
-              partidosSeleccionados[id] = "empate";
-            } else if (seleccion !== "") {
-              puntos[seleccion] += 3;
-              partidosSeleccionados[id] = seleccion;
-            } else {
-              delete partidosSeleccionados[id];
-            }
-            actualizarClasificacion();
-          });
-          div.appendChild(document.createTextNode(`${partido[0]} vs ${partido[1]}`));
-          div.appendChild(document.createElement("br"));
-          div.appendChild(select);
-          div.appendChild(document.createElement("br"));
-          div.appendChild(document.createElement("br"));
-        });
-        contenedor.appendChild(div);
-      });
-    }
-
+    // Jornadas de la liga
     const jornadas = [
       {
         nombre: "Jornada 34",
         partidos: [
-          ["Marbella FC", "Atlético B"], ["At. Sanluqueño", "CF Intercity"],
-          ["Alcoyano", "Recreativo"], ["Yeclano Deportivo", "Algeciras CF"],
-          ["RM Castilla", "AD Ceuta FC"], ["Sevilla At", "Betis Deportivo"],
-          ["AD Mérida", "Antequera CF"], ["Real Murcia", "Villarreal B"],
-          ["Hércules", "Alcorcón"], ["UD Ibiza", "Fuenlabrada"]
+          ["Marbella FC", "Atlético B"],
+          ["At. Sanluqueño", "CF Intercity"],
+          ["Alcoyano", "Recreativo"],
+          ["Yeclano Deportivo", "Algeciras CF"],
+          ["RM Castilla", "AD Ceuta FC"],
+          ["Sevilla At", "Betis Deportivo"],
+          ["AD Mérida", "Antequera CF"],
+          ["Real Murcia", "Villarreal B"],
+          ["Hércules", "Alcorcón"],
+          ["UD Ibiza", "Fuenlabrada"]
         ]
       },
       {
         nombre: "Jornada 35",
         partidos: [
-          ["Algeciras CF", "Betis Deportivo"], ["AD Ceuta FC", "AD Mérida"],
-          ["Alcorcón", "Yeclano Deportivo"], ["At. Sanluqueño", "Alcoyano"],
-          ["Antequera CF", "Sevilla At"], ["Atlético B", "Fuenlabrada"],
-          ["Recreativo", "UD Ibiza"], ["CF Intercity", "Real Murcia"],
-          ["RM Castilla", "Marbella FC"], ["Villarreal B", "Hércules"]
+          ["Algeciras CF", "Betis Deportivo"],
+          ["AD Ceuta FC", "AD Mérida"],
+          ["Alcorcón", "Yeclano Deportivo"],
+          ["At. Sanluqueño", "Alcoyano"],
+          ["Antequera CF", "Sevilla At"],
+          ["Atlético B", "Fuenlabrada"],
+          ["Recreativo", "UD Ibiza"],
+          ["CF Intercity", "Real Murcia"],
+          ["RM Castilla", "Marbella FC"],
+          ["Villarreal B", "Hércules"]
         ]
       },
       {
         nombre: "Jornada 36",
         partidos: [
-          ["UD Ibiza", "Alcorcón"], ["Alcoyano", "CF Intercity"],
-          ["Yeclano Deportivo", "Villarreal B"], ["Betis Deportivo", "At. Sanluqueño"],
-          ["Real Murcia", "Antequera CF"], ["Fuenlabrada", "AD Ceuta FC"],
-          ["Sevilla At", "Atlético B"], ["AD Mérida", "RM Castilla"],
-          ["Marbella FC", "Recreativo"], ["Hércules", "Algeciras CF"]
+          ["UD Ibiza", "Alcorcón"],
+          ["Alcoyano", "CF Intercity"],
+          ["Yeclano Deportivo", "Villarreal B"],
+          ["Betis Deportivo", "At. Sanluqueño"],
+          ["Real Murcia", "Antequera CF"],
+          ["Fuenlabrada", "AD Ceuta FC"],
+          ["Sevilla At", "Atlético B"],
+          ["AD Mérida", "RM Castilla"],
+          ["Marbella FC", "Recreativo"],
+          ["Hércules", "Algeciras CF"]
         ]
       },
       {
         nombre: "Jornada 37",
         partidos: [
-          ["AD Ceuta FC", "Yeclano Deportivo"], ["Alcorcón", "Marbella FC"],
-          ["Algeciras CF", "Alcoyano"], ["Antequera CF", "Betis Deportivo"],
-          ["Atlético B", "UD Ibiza"], ["CF Intercity", "Hércules"],
-          ["RM Castilla", "Fuenlabrada"], ["Recreativo", "AD Mérida"],
-          ["At. Sanluqueño", "Real Murcia"], ["Villarreal B", "Sevilla At"]
+          ["AD Ceuta FC", "Yeclano Deportivo"],
+          ["Alcorcón", "Marbella FC"],
+          ["Algeciras CF", "Alcoyano"],
+          ["Antequera CF", "Betis Deportivo"],
+          ["Atlético B", "UD Ibiza"],
+          ["CF Intercity", "Hércules"],
+          ["RM Castilla", "Fuenlabrada"],
+          ["Recreativo", "AD Mérida"],
+          ["At. Sanluqueño", "Real Murcia"],
+          ["Villarreal B", "Sevilla At"]
         ]
       },
       {
         nombre: "Jornada 38",
         partidos: [
-          ["Fuenlabrada", "Recreativo"], ["Hércules", "At. Sanluqueño"],
-          ["Betis Deportivo", "Villarreal B"], ["AD Mérida", "Atlético B"],
-          ["Sevilla At", "Alcorcón"], ["Yeclano Deportivo", "CF Intercity"],
-          ["UD Ibiza", "AD Ceuta FC"], ["Marbella FC", "Antequera CF"],
-          ["Real Murcia", "Algeciras CF"], ["Alcoyano", "RM Castilla"]
+          ["Fuenlabrada", "Recreativo"],
+          ["Hércules", "At. Sanluqueño"],
+          ["Betis Deportivo", "Villarreal B"],
+          ["AD Mérida", "Atlético B"],
+          ["Sevilla At", "Alcorcón"],
+          ["Yeclano Deportivo", "CF Intercity"],
+          ["UD Ibiza", "AD Ceuta FC"],
+          ["Marbella FC", "Antequera CF"],
+          ["Real Murcia", "Algeciras CF"],
+          ["Alcoyano", "RM Castilla"]
         ]
       }
     ];
 
-    inicializarPuntos();
-    crearJornadas();
+    // Actualiza la clasificación
+    function actualizarClasificacion() {
+      const tablaClasificacion = document.getElementById("tabla-clasificacion");
+      tablaClasificacion.innerHTML = ''; // Limpiar la tabla
+
+      const equiposOrdenados = Object.entries(equipos).sort((a, b) => b[1] - a[1]);
+
+      equiposOrdenados.forEach(([equipo, puntos], index) => {
+        let clasePos = '';
+        if (index === 0) {
+          clasePos = 'pos-1';
+        } else if (index >= 1 && index <= 4) {
+          clasePos = 'pos-2-5';
+        } else if (index >= 15) {
+          clasePos = 'pos-16-20';
+        }
+
+        const fila = document.createElement('tr');
+        fila.classList.add(clasePos);
+        fila.innerHTML = `
+          <td>${equipo}</td>
+          <td><b>${puntos}</b></td>
+        `;
+        tablaClasificacion.appendChild(fila);
+      });
+    }
+
+    // Generar la lista de jornadas
+    function generarJornadas() {
+      const divJornadas = document.getElementById("jornadas");
+      divJornadas.innerHTML = ''; // Limpiar las jornadas
+
+      jornadas.forEach(jornada => {
+        const jornadaDiv = document.createElement("div");
+        jornadaDiv.classList.add("jornada");
+
+        const nombreJornada = document.createElement("h3");
+        nombreJornada.textContent = jornada.nombre;
+        jornadaDiv.appendChild(nombreJornada);
+
+        jornada.partidos.forEach(partido => {
+          const partidoDiv = document.createElement("div");
+          partidoDiv.classList.add("partido");
+
+          const select = document.createElement("select");
+          select.innerHTML = `
+            <option value="">Selecciona el resultado</option>
+            <option value="${partido[0]} gana">${partido[0]} gana</option>
+            <option value="${partido[1]} gana">${partido[1]} gana</option>
+            <option value="empate">Empate</option>
+          `;
+          select.addEventListener("change", (e) => {
+            const resultado = e.target.value;
+            if (resultado) {
+              const [equipo1, equipo2] = partido;
+              let puntos1 = equipos[equipo1];
+              let puntos2 = equipos[equipo2];
+
+              if (resultado === `${equipo1} gana`) {
+                equipos[equipo1] = puntos1 + 3;
+                equipos[equipo2] = puntos2;
+              } else if (resultado === `${equipo2} gana`) {
+                equipos[equipo2] = puntos2 + 3;
+                equipos[equipo1] = puntos1;
+              } else if (resultado === "empate") {
+                equipos[equipo1] = puntos1 + 1;
+                equipos[equipo2] = puntos2 + 1;
+              }
+              actualizarClasificacion();
+            }
+          });
+
+          partidoDiv.innerHTML = `${partido[0]} vs ${partido[1]}: `;
+          partidoDiv.appendChild(select);
+          jornadaDiv.appendChild(partidoDiv);
+        });
+
+        divJornadas.appendChild(jornadaDiv);
+      });
+    }
+
+    // Inicialización
+    generarJornadas();
     actualizarClasificacion();
   </script>
 </body>
