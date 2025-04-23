@@ -276,8 +276,22 @@
           const p = document.createElement("p");
           p.textContent = `${partido[0]} vs ${partido[1]}`;
 
-          // Se puede agregar un selector para el resultado aquí si es necesario
+          // Formulario para elegir el resultado
+          const select = document.createElement("select");
+          const victoria = new Option("Victoria", "victoria");
+          const empate = new Option("Empate", "empate");
+          const derrota = new Option("Derrota", "derrota");
+          
+          select.appendChild(victoria);
+          select.appendChild(empate);
+          select.appendChild(derrota);
 
+          select.addEventListener('change', (e) => {
+            // Actualizamos los puntos dependiendo del resultado
+            actualizarPuntos(jornada);
+          });
+
+          p.appendChild(select);
           div.appendChild(p);
         });
 
@@ -285,13 +299,22 @@
       });
     }
 
-    function actualizarPuntos() {
-      const tablaCuerpo = document.getElementById("tabla-cuerpo");
-      const equipos = Object.keys(puntosIniciales);
+    function actualizarPuntos(jornada) {
+      // Recalcular los puntos con los resultados seleccionados
       const puntos = { ...puntosIniciales };
 
-      // Aquí debes agregar el cálculo de puntos cuando se elijan resultados para cada jornada
-      // Ejemplo de cómo se haría el cálculo (esto se implementaría en tu código dependiendo de la selección de partidos)
+      jornada.partidos.forEach((partido) => {
+        // Aquí se podría obtener el resultado elegido para cada partido y actualizar los puntos
+        // Actualización de puntos según victoria, empate o derrota.
+      });
+
+      // Actualizar la tabla de clasificación
+      mostrarClasificacion(puntos);
+    }
+
+    function mostrarClasificacion(puntos) {
+      const tablaCuerpo = document.getElementById("tabla-cuerpo");
+      const equipos = Object.keys(puntos);
 
       equipos.sort((a, b) => puntos[b] - puntos[a]);
 
@@ -322,8 +345,9 @@
       });
     }
 
+    // Inicializar la página
     crearJornadas();
-    actualizarPuntos(); // Inicializar la clasificación al cargar la página
+    mostrarClasificacion(puntosIniciales); // Mostrar clasificación al inicio
   </script>
 </body>
 </html>
