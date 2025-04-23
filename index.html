@@ -30,6 +30,8 @@
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
+      max-height: 80vh; /* Añadido para limitar el alto de las jornadas */
+      overflow-y: auto; /* Permitir desplazamiento solo en las jornadas */
     }
 
     .jornada {
@@ -63,7 +65,6 @@
 
     .clasificacion {
       width: 300px;
-      height: auto;
       background-color: #ffffff;
       padding: 20px;
       border-radius: 10px;
@@ -71,8 +72,9 @@
       position: fixed;
       top: 20px;
       right: 20px;
-      max-height: 80vh;
-      overflow-y: auto;
+      height: calc(100vh - 40px); /* Ocupa toda la altura de la ventana */
+      max-height: 100%; /* Limitar para que no sobrepase la pantalla */
+      overflow-y: auto; /* Permitir desplazamiento solo si es necesario */
       font-size: 0.9em;
     }
 
@@ -270,25 +272,13 @@
         h3.textContent = jornada.nombre;
         div.appendChild(h3);
 
-        jornada.partidos.forEach((partido, i) => {
-          const label = document.createElement("label");
-          label.textContent = `${partido[0]} vs ${partido[1]}`;
+        jornada.partidos.forEach((partido) => {
+          const p = document.createElement("p");
+          p.textContent = `${partido[0]} vs ${partido[1]}`;
 
-          const select = document.createElement("select");
-          select.id = `partido-${index}-${i}`;
-          select.setAttribute("data-local", partido[0]);
-          select.setAttribute("data-visitante", partido[1]);
+          // Se puede agregar un selector para el resultado aquí si es necesario
 
-          select.appendChild(new Option("Seleccionar resultado", ""));
-          select.appendChild(new Option(`${partido[0]} gana`, partido[0]));
-          select.appendChild(new Option("Empate", "empate"));
-          select.appendChild(new Option(`${partido[1]} gana`, partido[1]));
-
-          label.appendChild(select);
-          div.appendChild(label);
-
-          // Añadir el listener de cambio de select
-          select.addEventListener("change", actualizarPuntos);
+          div.appendChild(p);
         });
 
         container.appendChild(div);
@@ -296,53 +286,27 @@
     }
 
     function actualizarPuntos() {
-      // Inicializa los puntos nuevamente para calcular la clasificación
-      let puntos = { ...puntosIniciales };
-
-      jornadas.forEach((jornada, index) => {
-        jornada.partidos.forEach((partido, i) => {
-          const select = document.getElementById(`partido-${index}-${i}`);
-          if (select && select.value) {
-            const resultado = select.value;
-
-            if (resultado === partido[0]) {
-              puntos[partido[0]] += 3; // Gana el equipo local
-            } else if (resultado === partido[1]) {
-              puntos[partido[1]] += 3; // Gana el equipo visitante
-            } else if (resultado === "empate") {
-              puntos[partido[0]] += 1; // Empate, ambos suman 1
-              puntos[partido[1]] += 1;
-            }
-          }
-        });
-      });
-
-      // Ordena los equipos por puntos
-      const clasificacion = Object.keys(puntos).map(equipo => ({
-        equipo,
-        puntos: puntos[equipo]
-      })).sort((a, b) => b.puntos - a.puntos);
-
-      mostrarClasificacion(clasificacion);
-    }
-
-    function mostrarClasificacion(clasificacion) {
       const tablaCuerpo = document.getElementById("tabla-cuerpo");
+      const equipos = Object.keys(puntosIniciales);
+      const puntos = { ...puntosIniciales };
+
+      // Aquí debes agregar el cálculo de puntos cuando se elijan resultados para cada jornada
+      // Ejemplo de cómo se haría el cálculo (esto se implementaría en tu código dependiendo de la selección de partidos)
+
+      equipos.sort((a, b) => puntos[b] - puntos[a]);
+
       tablaCuerpo.innerHTML = "";
 
-      clasificacion.forEach((equipo, index) => {
+      equipos.forEach((equipo, index) => {
         const tr = document.createElement("tr");
         const tdPos = document.createElement("td");
         tdPos.textContent = index + 1;
-
         const tdEquipo = document.createElement("td");
-        tdEquipo.textContent = equipo.equipo;
-
+        tdEquipo.textContent = equipo;
         const tdPts = document.createElement("td");
-        tdPts.textContent = equipo.puntos;
-
-        // Colorear dependiendo de la posición
-        if (index < 1) {
+        tdPts.textContent = puntos[equipo];
+        
+        if (index === 0) {
           tdPos.classList.add("destacado-azul");
         } else if (index >= 1 && index <= 4) {
           tdPos.classList.add("destacado-verde");
