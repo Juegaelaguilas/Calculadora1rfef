@@ -37,59 +37,60 @@
     .contenido {
       display: flex;
       flex: 1;
+      overflow: hidden;
       height: 100%;
     }
 
     .jornadas {
-      width: 60%;
+      width: 65%;
       padding: 15px;
       font-size: 16px;
       overflow-y: auto;
+      height: 100%;
     }
 
     .clasificacion {
-      width: 40%;
+      width: 35%;
       padding: 10px;
       border-left: 2px solid #000;
       background-color: #f5f5f5;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
+      height: 100%;
     }
 
     table {
       border-collapse: collapse;
       width: 100%;
-      font-size: 16px;
-      table-layout: fixed;
+      font-size: 14px;
     }
 
     th, td {
       border: 1px solid #000;
-      padding: 4px;
+      padding: 6px 4px;
       text-align: left;
-    }
-
-    th:nth-child(1), td:nth-child(1) {
-      width: 10%;
-      text-align: center;
-      font-size: 14px;
-    }
-
-  th:nth-child(2), td:nth-child(2) {
-  width: 55%;
-  font-size: 18px; /* antes era 14px */
-}
-
-    th:nth-child(3), td:nth-child(3) {
-      width: 35%;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
     }
 
     th {
       background-color: #ddd;
+    }
+
+    th:nth-child(1), td:nth-child(1) {
+      width: 10%;
+      font-size: 12px;
+    }
+
+    th:nth-child(2), td:nth-child(2) {
+      width: 55%;
+      font-size: 18px;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+      width: 35%;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: right;
     }
 
     .pos-1 {
@@ -109,7 +110,7 @@
 
     h2 {
       font-size: 20px;
-      margin-bottom: 10px;
+      margin: 0 0 10px 0;
     }
 
     button {
@@ -125,13 +126,32 @@
     }
 
     .jornada h3 {
-      margin: 0;
+      margin: 0 0 10px 0;
       font-size: 18px;
     }
 
     .selected {
       background-color: green !important;
       color: white !important;
+    }
+
+    .partidos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .partido {
+      border: 1px solid #aaa;
+      padding: 8px;
+      background-color: #fff;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .partido p {
+      margin: 0 0 6px 0;
+      font-weight: bold;
     }
 
     @media (max-width: 768px) {
@@ -142,6 +162,7 @@
 
       .jornadas, .clasificacion {
         width: 100%;
+        height: auto;
         padding: 10px;
       }
 
@@ -155,20 +176,8 @@
         order: 2;
       }
 
-      table {
-        font-size: 18px;
-      }
-
-      th:nth-child(1), td:nth-child(1) {
-        font-size: 14px;
-      }
-
-      th:nth-child(2), td:nth-child(2) {
-        font-size: 14px;
-      }
-
-      th:nth-child(3), td:nth-child(3) {
-        font-size: 24px;
+      .partidos-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   </style>
@@ -294,9 +303,17 @@
         const div = document.createElement("div");
         div.classList.add("jornada");
         div.innerHTML = `<h3>${jornada.nombre}</h3>`;
+
+        const grid = document.createElement("div");
+        grid.classList.add("partidos-grid");
+
         jornada.partidos.forEach((partido) => {
           const containerPartido = document.createElement("div");
-          containerPartido.innerHTML = `<p>${partido[0]} vs ${partido[1]}</p>`;
+          containerPartido.classList.add("partido");
+
+          const parrafo = document.createElement("p");
+          parrafo.textContent = `${partido[0]} vs ${partido[1]}`;
+          containerPartido.appendChild(parrafo);
 
           const opciones = [partido[0], "Empate", partido[1]];
           let estadoAnterior = "";
@@ -304,7 +321,6 @@
           opciones.forEach(opcion => {
             const btn = document.createElement("button");
             btn.textContent = opcion;
-            btn.style.margin = "2px";
             btn.addEventListener("click", () => {
               const botones = containerPartido.querySelectorAll("button");
               botones.forEach(b => b.classList.remove("selected"));
@@ -334,8 +350,11 @@
             });
             containerPartido.appendChild(btn);
           });
-          div.appendChild(containerPartido);
+
+          grid.appendChild(containerPartido);
         });
+
+        div.appendChild(grid);
         container.appendChild(div);
       });
     }
