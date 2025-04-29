@@ -14,9 +14,7 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      height: 100vh;
       background-color: #e0f7ff;
-      justify-content: flex-start;
     }
 
     .titulo {
@@ -36,17 +34,13 @@
 
     .contenido {
       display: flex;
-      flex: 1;
-      overflow: hidden;
-      height: 100%;
+      width: 100%;
     }
 
     .jornadas {
       width: 65%;
       padding: 15px;
-      font-size: 16px;  /* Tamaño de fuente más pequeño para jornadas */
-      overflow-y: auto;
-      height: 100%;
+      font-size: 16px;
     }
 
     .clasificacion {
@@ -57,14 +51,12 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      overflow-y: auto; /* Permite que la clasificación haga scroll si es necesario */
-      height: 100%;
     }
 
     table {
       border-collapse: collapse;
       width: 100%;
-      font-size: 12px;  /* Tamaño de fuente más pequeño para la clasificación */
+      font-size: 12px;
     }
 
     th, td {
@@ -99,7 +91,7 @@
 
     button {
       margin: 2px;
-      font-size: 12px;  /* Tamaño de fuente más pequeño para los botones */
+      font-size: 12px;
       padding: 2px 6px;
     }
 
@@ -115,19 +107,17 @@
     }
 
     .selected {
-      background-color: green !important;  /* Cambiar a verde cuando la opción es seleccionada */
-      color: white !important;  /* Color blanco para el texto */
+      background-color: green !important;
+      color: white !important;
     }
 
     @media (max-width: 768px) {
       .contenido {
         flex-direction: column;
-        height: auto;
       }
 
       .jornadas, .clasificacion {
         width: 100%;
-        height: auto;
         padding: 10px;
       }
 
@@ -276,11 +266,8 @@
             btn.textContent = opcion;
             btn.style.margin = "2px";
             btn.addEventListener("click", () => {
-              // Eliminar la clase "selected" de todos los botones de este partido
               const botones = containerPartido.querySelectorAll("button");
               botones.forEach(b => b.classList.remove("selected"));
-
-              // Agregar la clase "selected" solo al botón que fue clickeado
               btn.classList.add("selected");
 
               const seleccion = opcion;
