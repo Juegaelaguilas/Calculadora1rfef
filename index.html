@@ -276,6 +276,13 @@
             btn.textContent = opcion;
             btn.style.margin = "2px";
             btn.addEventListener("click", () => {
+              // Eliminar la clase "selected" de todos los botones de este partido
+              const botones = containerPartido.querySelectorAll("button");
+              botones.forEach(b => b.classList.remove("selected"));
+
+              // Agregar la clase "selected" solo al botón que fue clickeado
+              btn.classList.add("selected");
+
               const seleccion = opcion;
               if (estadoAnterior && estadoAnterior !== "Selecciona resultado") {
                 if (estadoAnterior === "Empate") {
@@ -294,9 +301,6 @@
                 clasificacion[partido[0]] += 1;
                 clasificacion[partido[1]] += 1;
               }
-
-              // Cambiar el color de fondo del botón seleccionado
-              btn.classList.add("selected");
 
               estadoAnterior = seleccion;
               actualizarClasificacion();
