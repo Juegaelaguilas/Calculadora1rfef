@@ -28,16 +28,10 @@
 
     .clasificacion {
       width: 35%;
-      padding: 10px;
+      padding: 20px;
       border-left: 2px solid #000;
+      overflow-y: hidden;
       background-color: #f5f5f5;
-      height: auto;
-      overflow: hidden;
-    }
-
-    .clasificacion h2 {
-      font-size: 22px;
-      margin-bottom: 10px;
     }
 
     table {
@@ -47,9 +41,9 @@
 
     th, td {
       border: 2px solid #000;
-      padding: 4px;
+      padding: 8px;
       text-align: left;
-      font-size: 14px;
+      font-size: 16px;
     }
 
     th {
@@ -71,23 +65,30 @@
       font-weight: bold;
     }
 
-    select {
-      margin-top: 5px;
-      font-size: 20px;
-      width: 100%;
+    h2 {
+      font-size: 24px;
     }
 
     .leyenda {
-      margin-top: 10px;
-      font-size: 14px;
+      margin-top: 20px;
+      font-size: 16px;
     }
 
     .leyenda span {
       display: inline-block;
-      width: 14px;
-      height: 14px;
+      width: 20px;
+      height: 20px;
       vertical-align: middle;
-      margin-right: 6px;
+      margin-right: 10px;
+    }
+
+    label {
+      margin-right: 15px;
+      font-size: 18px;
+    }
+
+    input[type="radio"] {
+      margin-right: 5px;
     }
 
     @media (max-width: 768px) {
@@ -114,19 +115,19 @@
       }
 
       h2 {
-        font-size: 22px;
+        font-size: 20px;
       }
 
       th, td {
         font-size: 14px;
       }
 
-      select {
-        font-size: 18px;
-      }
-
       .leyenda {
         font-size: 14px;
+      }
+
+      label {
+        font-size: 16px;
       }
     }
   </style>
@@ -139,7 +140,7 @@
     <div class="leyenda">
       <p><span class="pos-1"></span>1º Clasificado</p>
       <p><span class="pos-2-5"></span>2º al 5º</p>
-      <p><span class="pos-16-20"></span>16º al 20º (Descenso)</p>
+      <p><span class="pos-16-20"></span>Puestos de descenso (16º al 20º)</p>
     </div>
   </div>
   <script>
@@ -198,36 +199,6 @@
           ["Marbella FC", "Recreativo"],
           ["Hércules", "Algeciras CF"]
         ]
-      },
-      {
-        nombre: "Jornada 37",
-        partidos: [
-          ["AD Ceuta FC", "Yeclano Deportivo"],
-          ["Alcorcón", "Marbella FC"],
-          ["Algeciras CF", "Alcoyano"],
-          ["Antequera CF", "Betis Deportivo"],
-          ["Atlético B", "UD Ibiza"],
-          ["CF Intercity", "Hércules"],
-          ["RM Castilla", "Fuenlabrada"],
-          ["Recreativo", "AD Mérida"],
-          ["At. Sanluqueño", "Real Murcia"],
-          ["Villarreal B", "Sevilla At"]
-        ]
-      },
-      {
-        nombre: "Jornada 38",
-        partidos: [
-          ["Fuenlabrada", "Recreativo"],
-          ["Hércules", "At. Sanluqueño"],
-          ["Betis Deportivo", "Villarreal B"],
-          ["AD Mérida", "Atlético B"],
-          ["Sevilla At", "Alcorcón"],
-          ["Yeclano Deportivo", "CF Intercity"],
-          ["UD Ibiza", "AD Ceuta FC"],
-          ["Marbella FC", "Antequera CF"],
-          ["Real Murcia", "Algeciras CF"],
-          ["Alcoyano", "RM Castilla"]
-        ]
       }
     ];
 
@@ -246,47 +217,54 @@
 
     function renderizarJornadas() {
       const container = document.getElementById("jornadas");
-      jornadas.forEach((jornada) => {
+      jornadas.forEach((jornada, jIndex) => {
         const div = document.createElement("div");
         div.innerHTML = `<h3>${jornada.nombre}</h3>`;
         jornada.partidos.forEach((partido) => {
-          const select = document.createElement("select");
-          ["Selecciona resultado", partido[0], "Empate", partido[1]].forEach(op => {
-            const option = document.createElement("option");
-            option.value = op;
-            option.textContent = op;
-            select.appendChild(option);
-          });
-
-          let estadoAnterior = "";
-
-          select.addEventListener("change", () => {
-            const seleccion = select.value;
-            if (estadoAnterior && estadoAnterior !== "Selecciona resultado") {
-              if (estadoAnterior === "Empate") {
-                clasificacion[partido[0]]--;
-                clasificacion[partido[1]]--;
-              } else {
-                clasificacion[estadoAnterior] -= 3;
-              }
-            }
-
-            if (seleccion === partido[0]) {
-              clasificacion[partido[0]] += 3;
-            } else if (seleccion === partido[1]) {
-              clasificacion[partido[1]] += 3;
-            } else if (seleccion === "Empate") {
-              clasificacion[partido[0]] += 1;
-              clasificacion[partido[1]] += 1;
-            }
-
-            estadoAnterior = seleccion;
-            actualizarClasificacion();
-          });
-
           const p = document.createElement("p");
           p.textContent = `${partido[0]} vs ${partido[1]}`;
-          p.appendChild(select);
+          const form = document.createElement("div");
+          form.style.margin = "5px 0";
+
+          const opciones = [partido[0], "Empate", partido[1]];
+          let estadoAnterior = "";
+
+          opciones.forEach(op => {
+            const label = document.createElement("label");
+            const radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = `resultado-${jIndex}-${partido[0]}-${partido[1]}`;
+            radio.value = op;
+
+            radio.addEventListener("change", () => {
+              if (estadoAnterior && estadoAnterior !== "Selecciona resultado") {
+                if (estadoAnterior === "Empate") {
+                  clasificacion[partido[0]]--;
+                  clasificacion[partido[1]]--;
+                } else {
+                  clasificacion[estadoAnterior] -= 3;
+                }
+              }
+
+              if (radio.value === partido[0]) {
+                clasificacion[partido[0]] += 3;
+              } else if (radio.value === partido[1]) {
+                clasificacion[partido[1]] += 3;
+              } else if (radio.value === "Empate") {
+                clasificacion[partido[0]] += 1;
+                clasificacion[partido[1]] += 1;
+              }
+
+              estadoAnterior = radio.value;
+              actualizarClasificacion();
+            });
+
+            label.appendChild(radio);
+            label.append(` ${op}`);
+            form.appendChild(label);
+          });
+
+          p.appendChild(form);
           div.appendChild(p);
         });
         container.appendChild(div);
