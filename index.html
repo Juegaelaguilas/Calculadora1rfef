@@ -4,70 +4,129 @@
   <meta charset="UTF-8">
   <title>Clasificación 1ª RFEF - Yeclano Virtual</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       display: flex;
+      flex-direction: row;
       height: 100vh;
       overflow: hidden;
+      background-color: #e0f7ff; /* Fondo azul claro */
     }
+
     .jornadas {
       width: 65%;
       padding: 20px;
-      overflow-y: scroll;
+      overflow-y: auto;
       height: 100vh;
       font-size: 24px;
     }
+
     .clasificacion {
       width: 35%;
       padding: 20px;
       border-left: 2px solid #000;
-      overflow: hidden;
+      overflow-y: auto;
       background-color: #f5f5f5;
     }
+
     table {
       border-collapse: collapse;
       width: 100%;
     }
+
     th, td {
       border: 2px solid #000;
       padding: 8px;
       text-align: left;
       font-size: 18px;
     }
+
     th {
       background-color: #ddd;
     }
+
     .pos-1 {
       background-color: #add8e6;
       font-weight: bold;
     }
+
     .pos-2-5 {
       background-color: #90ee90;
       font-weight: bold;
     }
+
     .pos-16-20 {
       background-color: #f08080;
       font-weight: bold;
     }
+
     select {
       margin-top: 5px;
       font-size: 20px;
       width: 100%;
     }
+
     h2 {
       font-size: 28px;
     }
+
     .leyenda {
       margin-top: 20px;
       font-size: 18px;
     }
+
     .leyenda span {
       display: inline-block;
       width: 20px;
       height: 20px;
       vertical-align: middle;
       margin-right: 10px;
+    }
+
+    /* ----------- RESPONSIVE DESIGN ----------- */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .jornadas,
+      .clasificacion {
+        width: 100%;
+        height: auto;
+        padding: 10px;
+      }
+
+      .jornadas {
+        order: 2;
+      }
+
+      .clasificacion {
+        order: 1;
+        border-left: none;
+        border-bottom: 2px solid #000;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      th, td {
+        font-size: 16px;
+      }
+
+      select {
+        font-size: 18px;
+      }
+
+      .leyenda {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -109,7 +168,6 @@
     const clasificacion = { ...puntosBase };
 
     const jornadas = [
-  
       {
         nombre: "Jornada 35",
         partidos: [
@@ -191,7 +249,7 @@
       jornadas.forEach((jornada, jIndex) => {
         const div = document.createElement("div");
         div.innerHTML = `<h3>${jornada.nombre}</h3>`;
-        jornada.partidos.forEach((partido, index) => {
+        jornada.partidos.forEach((partido) => {
           const select = document.createElement("select");
           const opciones = [
             "Selecciona resultado",
@@ -210,7 +268,6 @@
 
           select.addEventListener("change", () => {
             const seleccion = select.value;
-            // Revertir puntos anteriores si existía uno válido
             if (estadoAnterior && estadoAnterior !== "Selecciona resultado") {
               if (estadoAnterior === "Empate") {
                 clasificacion[partido[0]]--;
@@ -220,7 +277,6 @@
               }
             }
 
-            // Aplicar nuevo resultado
             if (seleccion === partido[0]) {
               clasificacion[partido[0]] += 3;
             } else if (seleccion === partido[1]) {
@@ -248,6 +304,3 @@
   </script>
 </body>
 </html>
-
-
-
