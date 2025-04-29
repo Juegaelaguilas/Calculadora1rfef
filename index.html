@@ -38,13 +38,15 @@
       display: flex;
       flex: 1;
       overflow: hidden;
+      height: 100%;
     }
 
     .jornadas {
       width: 65%;
       padding: 20px;
-      overflow-y: auto;
+      overflow-y: auto; /* Permite scroll si es necesario */
       font-size: 20px;
+      height: 100%; /* Asegura que ocupe el 100% de la altura */
     }
 
     .clasificacion {
@@ -55,8 +57,8 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      height: calc(100vh - 80px); /* Ajustamos la altura para que no tenga scroll */
-      overflow-y: auto; /* Permitir desplazamiento si hay más contenido */
+      overflow: hidden; /* No permite scroll en la clasificación */
+      height: 100%; /* Ocupa todo el espacio disponible */
     }
 
     table {
