@@ -55,7 +55,8 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      height: 100%;
+      height: calc(100vh - 80px); /* Ajustamos la altura para que no tenga scroll */
+      overflow-y: auto; /* Permitir desplazamiento si hay más contenido */
     }
 
     table {
@@ -274,6 +275,7 @@
             btn.textContent = opcion;
             btn.style.margin = "2px";
             btn.addEventListener("click", () => {
+              const seleccion = opcion;
               if (estadoAnterior && estadoAnterior !== "Selecciona resultado") {
                 if (estadoAnterior === "Empate") {
                   clasificacion[partido[0]]--;
@@ -283,19 +285,20 @@
                 }
               }
 
-              if (opcion === "Empate") {
+              if (seleccion === partido[0]) {
+                clasificacion[partido[0]] += 3;
+              } else if (seleccion === partido[1]) {
+                clasificacion[partido[1]] += 3;
+              } else if (seleccion === "Empate") {
                 clasificacion[partido[0]] += 1;
                 clasificacion[partido[1]] += 1;
-              } else {
-                clasificacion[opcion] += 3;
               }
 
-              estadoAnterior = opcion;
+              estadoAnterior = seleccion;
               actualizarClasificacion();
             });
             containerPartido.appendChild(btn);
           });
-
           div.appendChild(containerPartido);
         });
         container.appendChild(div);
