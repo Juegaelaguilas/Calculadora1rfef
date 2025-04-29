@@ -15,7 +15,7 @@
       flex-direction: row;
       height: 100vh;
       overflow: hidden;
-      background-color: #e0f7ff; /* Fondo azul claro */
+      background-color: #e0f7ff;
     }
 
     .jornadas {
@@ -28,11 +28,16 @@
 
     .clasificacion {
       width: 35%;
-      padding: 20px;
+      padding: 10px;
       border-left: 2px solid #000;
-      overflow-y: auto;
       background-color: #f5f5f5;
-      height: 90vh; /* Ajustada para que no ocupe toda la pantalla */
+      height: auto;
+      overflow: hidden;
+    }
+
+    .clasificacion h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
     }
 
     table {
@@ -42,9 +47,9 @@
 
     th, td {
       border: 2px solid #000;
-      padding: 8px;
+      padding: 4px;
       text-align: left;
-      font-size: 18px;
+      font-size: 14px;
     }
 
     th {
@@ -72,24 +77,19 @@
       width: 100%;
     }
 
-    h2 {
-      font-size: 28px;
-    }
-
     .leyenda {
-      margin-top: 20px;
-      font-size: 18px;
+      margin-top: 10px;
+      font-size: 14px;
     }
 
     .leyenda span {
       display: inline-block;
-      width: 20px;
-      height: 20px;
+      width: 14px;
+      height: 14px;
       vertical-align: middle;
-      margin-right: 10px;
+      margin-right: 6px;
     }
 
-    /* ----------- RESPONSIVE DESIGN ----------- */
     @media (max-width: 768px) {
       body {
         flex-direction: column;
@@ -118,7 +118,7 @@
       }
 
       th, td {
-        font-size: 16px;
+        font-size: 14px;
       }
 
       select {
@@ -126,7 +126,7 @@
       }
 
       .leyenda {
-        font-size: 16px;
+        font-size: 14px;
       }
     }
   </style>
@@ -139,7 +139,7 @@
     <div class="leyenda">
       <p><span class="pos-1"></span>1º Clasificado</p>
       <p><span class="pos-2-5"></span>2º al 5º</p>
-      <p><span class="pos-16-20"></span>Puestos de descenso (16º al 20º)</p>
+      <p><span class="pos-16-20"></span>16º al 20º (Descenso)</p>
     </div>
   </div>
   <script>
@@ -234,8 +234,7 @@
     function actualizarClasificacion() {
       const tabla = document.getElementById("tabla-clasificacion");
       tabla.innerHTML = "<tr><th>Pos</th><th>Equipo</th><th>Puntos</th></tr>";
-      const ordenados = Object.entries(clasificacion)
-        .sort((a, b) => b[1] - a[1]);
+      const ordenados = Object.entries(clasificacion).sort((a, b) => b[1] - a[1]);
       ordenados.forEach(([equipo, puntos], i) => {
         let clase = "";
         if (i === 0) clase = "pos-1";
@@ -247,18 +246,12 @@
 
     function renderizarJornadas() {
       const container = document.getElementById("jornadas");
-      jornadas.forEach((jornada, jIndex) => {
+      jornadas.forEach((jornada) => {
         const div = document.createElement("div");
         div.innerHTML = `<h3>${jornada.nombre}</h3>`;
         jornada.partidos.forEach((partido) => {
           const select = document.createElement("select");
-          const opciones = [
-            "Selecciona resultado",
-            partido[0],
-            "Empate",
-            partido[1]
-          ];
-          opciones.forEach(op => {
+          ["Selecciona resultado", partido[0], "Empate", partido[1]].forEach(op => {
             const option = document.createElement("option");
             option.value = op;
             option.textContent = op;
