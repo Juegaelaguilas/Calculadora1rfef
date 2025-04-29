@@ -16,21 +16,21 @@
       flex-direction: column;
       height: 100vh;
       background-color: #e0f7ff;
+      justify-content: flex-start;
     }
 
-    header {
-      background-color: white;
+    .titulo {
       text-align: center;
-      padding: 10px;
       font-size: 28px;
       font-weight: bold;
+      margin-top: 20px;
     }
 
-    header span.azul {
+    .titulo span.azul {
       color: #0044cc;
     }
 
-    header span.rojo {
+    .titulo span.rojo {
       color: #cc0000;
     }
 
@@ -44,9 +44,9 @@
     .jornadas {
       width: 65%;
       padding: 20px;
-      overflow-y: auto; /* Permite scroll si es necesario */
+      overflow-y: auto;
       font-size: 20px;
-      height: 100%; /* Asegura que ocupe el 100% de la altura */
+      height: 100%;
     }
 
     .clasificacion {
@@ -57,8 +57,8 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      overflow: hidden; /* No permite scroll en la clasificación */
-      height: 100%; /* Ocupa todo el espacio disponible */
+      overflow: hidden;
+      height: 100%;
     }
 
     table {
@@ -141,9 +141,9 @@
   </style>
 </head>
 <body>
-  <header>
+  <div class="titulo">
     <span class="azul">@juega</span><span class="rojo">elyeclano</span>
-  </header>
+  </div>
 
   <div class="contenido">
     <div class="jornadas" id="jornadas"></div>
