@@ -114,6 +114,11 @@
       font-size: 18px;
     }
 
+    .selected {
+      background-color: green !important;  /* Cambiar a verde cuando la opción es seleccionada */
+      color: white !important;  /* Color blanco para el texto */
+    }
+
     @media (max-width: 768px) {
       .contenido {
         flex-direction: column;
@@ -289,6 +294,9 @@
                 clasificacion[partido[0]] += 1;
                 clasificacion[partido[1]] += 1;
               }
+
+              // Cambiar el color de fondo del botón seleccionado
+              btn.classList.add("selected");
 
               estadoAnterior = seleccion;
               actualizarClasificacion();
