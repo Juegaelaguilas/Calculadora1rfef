@@ -2,245 +2,149 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Clasificación 1ª RFEF - Yeclano Virtual</title>
+  <title>Liga de Fútbol - Jornadas</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      background-color: #e0f7ff;
-      justify-content: flex-start;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
     }
 
-    .titulo {
+    h1, h2 {
       text-align: center;
-      font-size: 32px;
-      font-weight: bold;
-      margin-top: 20px;
+      color: #2c3e50;
     }
 
-    .titulo span.azul {
-      color: #0044cc;
-    }
-
-    .titulo span.rojo {
-      color: #cc0000;
-    }
-
-    .contenido {
+    .container {
       display: flex;
-      flex: 1;
-      overflow: hidden;
-      height: 100%;
+      justify-content: space-between;
+      gap: 20px;
     }
 
     .jornadas {
-      width: 65%;
-      padding: 15px;
-      font-size: 18px;
-      overflow-y: auto;
-      height: 100%;
-    }
-
-    .clasificacion {
-      width: 35%;
-      padding: 10px;
-      border-left: 2px solid #000;
-      background-color: #f5f5f5;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      height: 100%;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 16px;
-    }
-
-    th, td {
-      border: 1px solid #000;
-      padding: 6px 4px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #ddd;
-    }
-
-    th:nth-child(1), td:nth-child(1) {
-      width: 10%;
-      font-size: 14px;
-    }
-
-    th:nth-child(2), td:nth-child(2) {
-      width: 50%;
-      font-size: 20px;
-    }
-
-    th:nth-child(3), td:nth-child(3) {
-      width: 40%;
-      font-size: 22px;
-      font-weight: bold;
-      text-align: right;
-    }
-
-    .pos-1 {
-      background-color: #add8e6;
-      font-weight: bold;
-    }
-
-    .pos-2-5 {
-      background-color: #90ee90;
-      font-weight: bold;
-    }
-
-    .pos-16-20 {
-      background-color: #f08080;
-      font-weight: bold;
-    }
-
-    h2 {
-      font-size: 22px;
-      margin: 0 0 10px 0;
-    }
-
-    button {
-      margin: 4px;
-      font-size: 16px;
-      padding: 4px 10px;
+      flex: 2;
     }
 
     .jornada {
-      border: 2px solid #000;
-      padding: 10px;
-      margin-bottom: 15px;
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
     }
 
     .jornada h3 {
-      margin: 0 0 10px 0;
-      font-size: 22px;
+      margin-top: 0;
+      color: #2980b9;
     }
 
-    .selected {
-      background-color: green !important;
-      color: white !important;
+    label {
+      display: block;
+      margin: 10px 0;
     }
 
-    .partidos-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
+    select {
+      margin-left: 10px;
+      padding: 5px;
     }
 
-    .partido {
-      border: 1px solid #aaa;
+    .clasificacion {
+      flex: 1;
+      background-color: #ffffff;
       padding: 10px;
-      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      height: 100%;
+      max-height: none;
+      position: sticky;
+      top: 20px;
+      overflow-y: auto;
+      font-size: 0.8em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 4px;
       text-align: center;
-      font-size: 18px;
     }
 
-    .partido p {
-      margin: 0 0 10px 0;
+    .destacado-rojo {
+      background-color: #ffcccc;
       font-weight: bold;
-      font-size: 20px;
     }
 
-    @media (max-width: 768px) {
-      .contenido {
-        flex-direction: column;
-        height: auto;
-      }
-
-      .jornadas, .clasificacion {
-        width: 100%;
-        height: auto;
-        padding: 10px;
-      }
-
-      .clasificacion {
-        order: 1;
-        border-left: none;
-        border-bottom: 2px solid #000;
-      }
-
-      .jornadas {
-        order: 2;
-      }
-
-      .partidos-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
+    .leyenda {
+      margin-top: 10px;
+      font-size: 0.9em;
     }
+
+    .leyenda span {
+      display: inline-block;
+      width: 20px;
+      height: 10px;
+      margin-right: 5px;
+    }
+
+    .rojo { background-color: #ffcccc; }
   </style>
 </head>
 <body>
-  <div class="titulo">
-    <span class="azul">@juega</span><span class="rojo">elyeclano</span>
-  </div>
 
-  <div class="contenido">
-    <div class="jornadas" id="jornadas"></div>
+  <h1>Calendario de Jornadas - Liga de Fútbol</h1>
+
+  <div class="container">
+    <div class="jornadas" id="partidos-container"></div>
+
     <div class="clasificacion">
       <h2>Clasificación</h2>
-      <table id="tabla-clasificacion"></table>
+      <table>
+        <thead>
+          <tr>
+            <th>Pos.</th>
+            <th>Equipo</th>
+            <th>Pts</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-cuerpo"></tbody>
+      </table>
+      <div class="leyenda">
+        <p><span class="rojo"></span>16ª a 20ª Posición (Descenso)</p>
+      </div>
     </div>
   </div>
 
   <script>
-    const puntosBase = {
-     
+    const puntosIniciales = {
       "Villarreal B": 43,
-      "Fuenlabrada": 43,
-      "Marbella FC": 42,
+      "Marbella FC": 43,
       "Yeclano Deportivo": 42,
-      "At. Sanluqueño": 41,
-      "Recreativo": 40,
-      "Alcoyano": 37,
+      "At. Sanluqueño": 42,
+      "Alcoyano": 41,
+      "Fuenlabrada": 40,
+      "Recreativo": 37,
       "CF Intercity": 29
     };
 
-    const clasificacion = { ...puntosBase };
-
-    function actualizarClasificacion() {
-      const tabla = document.getElementById("tabla-clasificacion");
-      tabla.innerHTML = "<tr><th>Pos</th><th>Equipo</th><th>Pts</th></tr>";
-      const ordenados = Object.entries(clasificacion).sort((a, b) => b[1] - a[1]);
-      ordenados.forEach(([equipo, puntos], i) => {
-        let clase = "";
-        if (i === 0) clase = "pos-1";
-        else if (i >= 1 && i <= 4) clase = "pos-2-5";
-        else if (i >= 15) clase = "pos-16-20";
-        tabla.innerHTML += `<tr class="${clase}"><td>${i + 1}</td><td>${equipo}</td><td>${puntos}</td></tr>`;
-      });
-    }
-
     const jornadas = [
-      {
-      
       {
         nombre: "Jornada 37",
         partidos: [
-          ["AD Ceuta FC", "Yeclano Deportivo"],
-          ["Alcorcón", "Marbella FC"],
           ["Algeciras CF", "Alcoyano"],
-          ["Antequera CF", "Betis Deportivo"],
           ["Atlético B", "UD Ibiza"],
           ["CF Intercity", "Hércules"],
           ["RM Castilla", "Fuenlabrada"],
           ["Recreativo", "AD Mérida"],
           ["At. Sanluqueño", "Real Murcia"],
-          ["Villarreal B", "Sevilla At"]
-        ]
+          ["Villarreal B", "Sevilla At"],
+          ["AD Ceuta FC", "Yeclano Deportivo"],
+          ["Alcorcón", "Marbella FC"]
+        ].filter(p => puntosIniciales.hasOwnProperty(p[0]) || puntosIniciales.hasOwnProperty(p[1]))
       },
       {
         nombre: "Jornada 38",
@@ -248,81 +152,100 @@
           ["Fuenlabrada", "Recreativo"],
           ["Hércules", "At. Sanluqueño"],
           ["Betis Deportivo", "Villarreal B"],
-          ["AD Mérida", "Atlético B"],
           ["Sevilla At", "Alcorcón"],
           ["Yeclano Deportivo", "CF Intercity"],
-          ["UD Ibiza", "AD Ceuta FC"],
           ["Marbella FC", "Antequera CF"],
           ["Real Murcia", "Algeciras CF"],
           ["Alcoyano", "RM Castilla"]
-        ]
+        ].filter(p => puntosIniciales.hasOwnProperty(p[0]) || puntosIniciales.hasOwnProperty(p[1]))
       }
     ];
 
-    function renderizarJornadas() {
-      const container = document.getElementById("jornadas");
-      jornadas.forEach((jornada) => {
+    function crearJornadas() {
+      const container = document.getElementById("partidos-container");
+
+      jornadas.forEach((jornada, index) => {
         const div = document.createElement("div");
-        div.classList.add("jornada");
-        div.innerHTML = `<h3>${jornada.nombre}</h3>`;
+        div.className = "jornada";
 
-        const grid = document.createElement("div");
-        grid.classList.add("partidos-grid");
+        const h3 = document.createElement("h3");
+        h3.textContent = jornada.nombre;
+        div.appendChild(h3);
 
-        jornada.partidos.forEach((partido) => {
-          const containerPartido = document.createElement("div");
-          containerPartido.classList.add("partido");
+        jornada.partidos.forEach((partido, i) => {
+          const label = document.createElement("label");
+          label.textContent = `${partido[0]} vs ${partido[1]}`;
 
-          const parrafo = document.createElement("p");
-          parrafo.textContent = `${partido[0]} vs ${partido[1]}`;
-          containerPartido.appendChild(parrafo);
+          const select = document.createElement("select");
+          select.id = `partido-${index}-${i}`;
+          select.setAttribute("data-local", partido[0]);
+          select.setAttribute("data-visitante", partido[1]);
 
-          const opciones = [partido[0], "Empate", partido[1]];
-          let estadoAnterior = "";
+          select.appendChild(new Option("Seleccionar resultado", ""));
+          select.appendChild(new Option(`${partido[0]} gana`, partido[0]));
+          select.appendChild(new Option("Empate", "empate"));
+          select.appendChild(new Option(`${partido[1]} gana`, partido[1]));
 
-          opciones.forEach(opcion => {
-            const btn = document.createElement("button");
-            btn.textContent = opcion;
-            btn.addEventListener("click", () => {
-              const botones = containerPartido.querySelectorAll("button");
-              botones.forEach(b => b.classList.remove("selected"));
-              btn.classList.add("selected");
-
-              const seleccion = opcion;
-              if (estadoAnterior && estadoAnterior !== "Selecciona resultado") {
-                if (estadoAnterior === "Empate") {
-                  clasificacion[partido[0]]--;
-                  clasificacion[partido[1]]--;
-                } else {
-                  clasificacion[estadoAnterior] -= 3;
-                }
-              }
-
-              if (seleccion === partido[0]) {
-                clasificacion[partido[0]] += 3;
-              } else if (seleccion === partido[1]) {
-                clasificacion[partido[1]] += 3;
-              } else if (seleccion === "Empate") {
-                clasificacion[partido[0]] += 1;
-                clasificacion[partido[1]] += 1;
-              }
-
-              estadoAnterior = seleccion;
-              actualizarClasificacion();
-            });
-            containerPartido.appendChild(btn);
-          });
-
-          grid.appendChild(containerPartido);
+          label.appendChild(select);
+          div.appendChild(label);
         });
 
-        div.appendChild(grid);
         container.appendChild(div);
       });
     }
 
-    actualizarClasificacion();
-    renderizarJornadas();
+    function calcularTabla() {
+      const tabla = document.getElementById("tabla-cuerpo");
+
+      const equipos = Object.keys(puntosIniciales).map(equipo => ({
+        equipo,
+        puntos: puntosIniciales[equipo]
+      }));
+
+      jornadas.forEach((jornada, index) => {
+        jornada.partidos.forEach((partido, i) => {
+          const select = document.getElementById(`partido-${index}-${i}`);
+          if (select && select.value) {
+            const resultado = select.value;
+            if (resultado === partido[0]) {
+              puntosIniciales[partido[0]] += 3;
+            } else if (resultado === partido[1]) {
+              puntosIniciales[partido[1]] += 3;
+            } else if (resultado === "empate") {
+              puntosIniciales[partido[0]] += 1;
+              puntosIniciales[partido[1]] += 1;
+            }
+          }
+        });
+      });
+
+      equipos.sort((a, b) => b.puntos - a.puntos);
+
+      tabla.innerHTML = "";
+
+      equipos.forEach((equipo, index) => {
+        const tr = document.createElement("tr");
+
+        const tdPos = document.createElement("td");
+        tdPos.textContent = index + 13; // Posición original desde el 13
+
+        const tdEquipo = document.createElement("td");
+        tdEquipo.textContent = equipo.equipo;
+
+        const tdPts = document.createElement("td");
+        tdPts.textContent = equipo.puntos;
+
+        if (index + 13 >= 16) tdPos.classList.add("destacado-rojo");
+
+        tr.appendChild(tdPos);
+        tr.appendChild(tdEquipo);
+        tr.appendChild(tdPts);
+        tabla.appendChild(tr);
+      });
+    }
+
+    crearJornadas();
+    calcularTabla();
   </script>
 </body>
 </html>
