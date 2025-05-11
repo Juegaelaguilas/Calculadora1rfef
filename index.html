@@ -38,47 +38,56 @@
       color: #2980b9;
     }
 
-    .opcion-resultado {
-      display: inline-block;
-      padding: 6px 12px;
-      margin: 4px;
-      background-color: #e0e0e0;
-      border-radius: 5px;
+    .partido {
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
       cursor: pointer;
+    }
+
+    .equipo {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      border: 1px solid #ccc;
+      margin: 0 5px;
+      border-radius: 6px;
+      background-color: #eee;
       transition: background-color 0.2s;
     }
 
-    .opcion-resultado:hover {
-      background-color: #d0d0d0;
+    .equipo.seleccionado {
+      background-color: #b2f2bb;
+      font-weight: bold;
     }
 
-    .opcion-resultado.seleccionado {
-      background-color: #b2fab4;
-      font-weight: bold;
+    .empate {
+      background-color: #f3f3f3;
     }
 
     .clasificacion {
       flex: 1;
       background-color: #ffffff;
-      padding: 10px;
+      padding: 20px;
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       height: 100%;
       position: sticky;
       top: 20px;
       overflow-y: auto;
-      font-size: 0.8em;
+      font-size: 1em;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
+      font-size: 1em;
     }
 
     th, td {
       border: 1px solid #ccc;
-      padding: 4px;
+      padding: 10px;
       text-align: center;
     }
 
@@ -86,20 +95,6 @@
       background-color: #ffcccc;
       font-weight: bold;
     }
-
-    .leyenda {
-      margin-top: 10px;
-      font-size: 0.9em;
-    }
-
-    .leyenda span {
-      display: inline-block;
-      width: 20px;
-      height: 10px;
-      margin-right: 5px;
-    }
-
-    .rojo { background-color: #ffcccc; }
   </style>
 </head>
 <body>
@@ -110,7 +105,7 @@
     <div class="jornadas" id="partidos-container"></div>
 
     <div class="clasificacion">
-      <h2>Clasificación</h2>
+      <h2>Clasificación (13° al 20°)</h2>
       <table>
         <thead>
           <tr>
@@ -121,14 +116,11 @@
         </thead>
         <tbody id="tabla-cuerpo"></tbody>
       </table>
-      <div class="leyenda">
-        <p><span class="rojo"></span>Posiciones de descenso</p>
-      </div>
     </div>
   </div>
 
   <script>
-    const puntosInicialesBase = {
+    const puntosBase = {
       "Villarreal B": 43,
       "Marbella FC": 43,
       "Yeclano Deportivo": 42,
@@ -139,40 +131,48 @@
       "CF Intercity": 29
     };
 
+    const equipos = Object.keys(puntosBase).map(nombre => ({
+      nombre,
+      puntos: puntosBase[nombre]
+    }));
+
+    const equiposEnClasificacion = new Set(Object.keys(puntosBase));
+
     const jornadas = [
       {
         nombre: "Jornada 37",
         partidos: [
-          ["Algeciras CF", "Alcoyano"],
+          ["CF Intercity", "Hércules"],
           ["Marbella FC", "Antequera CF"],
+          ["Recreativo", "AD Mérida"],
           ["At. Sanluqueño", "Real Murcia"],
           ["Villarreal B", "Sevilla At"],
-          ["CF Intercity", "Hércules"],
-          ["RM Castilla", "Fuenlabrada"],
-          ["Recreativo", "AD Mérida"],
-          ["AD Ceuta FC", "Yeclano Deportivo"]
+          ["Yeclano Deportivo", "Algeciras CF"],
+          ["Alcoyano", "UD Ibiza"],
+          ["Fuenlabrada", "AD Ceuta FC"]
         ]
       },
       {
         nombre: "Jornada 38",
         partidos: [
-          ["Alcoyano", "RM Castilla"],
-          ["Marbella FC", "Antequera CF"],
+          ["Fuenlabrada", "Recreativo"],
           ["Hércules", "At. Sanluqueño"],
           ["Betis Deportivo", "Villarreal B"],
+          ["Marbella FC", "Antequera CF"],
+          ["Real Murcia", "Algeciras CF"],
           ["Yeclano Deportivo", "CF Intercity"],
-          ["Fuenlabrada", "Recreativo"]
+          ["Sevilla At", "Alcorcón"],
+          ["Alcoyano", "RM Castilla"]
         ]
       }
     ];
 
-    const puntosIniciales = JSON.parse(JSON.stringify(puntosInicialesBase));
-    const resultadosSeleccionados = {};
+    const resultados = {};
 
     function crearJornadas() {
       const container = document.getElementById("partidos-container");
 
-      jornadas.forEach((jornada, index) => {
+      jornadas.forEach((jornada, jIndex) => {
         const div = document.createElement("div");
         div.className = "jornada";
 
@@ -180,103 +180,109 @@
         h3.textContent = jornada.nombre;
         div.appendChild(h3);
 
-        jornada.partidos.forEach((partido, i) => {
-          const contenedor = document.createElement("div");
+        jornada.partidos.forEach((partido, pIndex) => {
+          const [local, visitante] = partido;
 
-          const opciones = [
-            { texto: partido[0], value: partido[0] },
-            { texto: "Empate", value: "empate" },
-            { texto: partido[1], value: partido[1] }
-          ];
+          // Mostrar solo si al menos uno de los equipos está en la tabla
+          if (!equiposEnClasificacion.has(local) && !equiposEnClasificacion.has(visitante)) {
+            return;
+          }
 
-          opciones.forEach(opcion => {
-            const span = document.createElement("span");
-            span.className = "opcion-resultado";
-            span.textContent = opcion.texto;
-            span.setAttribute("data-partido-id", `${index}-${i}`);
-            span.setAttribute("data-valor", opcion.value);
+          const row = document.createElement("div");
+          row.className = "partido";
 
-            span.addEventListener("click", () => {
-              const yaSeleccionado = span.classList.contains("seleccionado");
+          const localDiv = document.createElement("div");
+          localDiv.className = "equipo";
+          localDiv.textContent = local;
 
-              document.querySelectorAll(`.opcion-resultado[data-partido-id='${index}-${i}']`)
-                .forEach(el => el.classList.remove("seleccionado"));
+          const empateDiv = document.createElement("div");
+          empateDiv.className = "equipo empate";
+          empateDiv.textContent = "Empate";
 
-              if (yaSeleccionado) {
-                delete resultadosSeleccionados[`${index}-${i}`];
-              } else {
-                span.classList.add("seleccionado");
-                resultadosSeleccionados[`${index}-${i}`] = opcion.value;
-              }
+          const visitanteDiv = document.createElement("div");
+          visitanteDiv.className = "equipo";
+          visitanteDiv.textContent = visitante;
 
-              calcularTabla();
+          [localDiv, empateDiv, visitanteDiv].forEach(btn => {
+            btn.addEventListener("click", () => {
+              const key = `j${jIndex}-p${pIndex}`;
+              resultados[key] = btn.textContent;
+
+              [localDiv, empateDiv, visitanteDiv].forEach(el => el.classList.remove("seleccionado"));
+              btn.classList.add("seleccionado");
+              recalcularPuntos();
             });
-
-            contenedor.appendChild(span);
           });
 
-          div.appendChild(contenedor);
+          row.appendChild(localDiv);
+          row.appendChild(empateDiv);
+          row.appendChild(visitanteDiv);
+
+          div.appendChild(row);
         });
 
         container.appendChild(div);
       });
     }
 
-    function calcularTabla() {
-      const tabla = document.getElementById("tabla-cuerpo");
-      const puntos = JSON.parse(JSON.stringify(puntosInicialesBase));
+    function recalcularPuntos() {
+      equipos.forEach(e => {
+        e.puntos = puntosBase[e.nombre];
+      });
 
-      for (const key in resultadosSeleccionados) {
-        const [jornadaIdx, partidoIdx] = key.split("-").map(Number);
-        const partido = jornadas[jornadaIdx].partidos[partidoIdx];
-        const resultado = resultadosSeleccionados[key];
+      Object.entries(resultados).forEach(([key, ganador]) => {
+        const [jIndex, pIndex] = key.replace("j", "").split("-p").map(Number);
+        const partido = jornadas[jIndex].partidos[pIndex];
+        const [local, visitante] = partido;
 
-        if (resultado === partido[0]) {
-          if (puntos[partido[0]] !== undefined) puntos[partido[0]] += 3;
-        } else if (resultado === partido[1]) {
-          if (puntos[partido[1]] !== undefined) puntos[partido[1]] += 3;
-        } else if (resultado === "empate") {
-          if (puntos[partido[0]] !== undefined) puntos[partido[0]] += 1;
-          if (puntos[partido[1]] !== undefined) puntos[partido[1]] += 1;
+        if (ganador === "Empate") {
+          sumarPuntos(local, 1);
+          sumarPuntos(visitante, 1);
+        } else {
+          sumarPuntos(ganador, 3);
         }
-      }
+      });
 
-      const equipos = Object.keys(puntos).map(equipo => ({
-        equipo,
-        puntos: puntos[equipo]
-      }));
+      actualizarTabla();
+    }
 
-      equipos.sort((a, b) => b.puntos - a.puntos);
+    function sumarPuntos(nombre, puntos) {
+      const equipo = equipos.find(e => e.nombre === nombre);
+      if (equipo) equipo.puntos += puntos;
+    }
 
+    function actualizarTabla() {
+      const tabla = document.getElementById("tabla-cuerpo");
       tabla.innerHTML = "";
 
-      equipos.forEach((equipo, index) => {
+      const ordenados = [...equipos].sort((a, b) => b.puntos - a.puntos);
+
+      ordenados.forEach((equipo, index) => {
         const tr = document.createElement("tr");
 
         const tdPos = document.createElement("td");
-        tdPos.textContent = index + 1;
+        tdPos.textContent = index + 13;
 
-        const tdEquipo = document.createElement("td");
-        tdEquipo.textContent = equipo.equipo;
+        const tdNombre = document.createElement("td");
+        tdNombre.textContent = equipo.nombre;
 
-        const tdPts = document.createElement("td");
-        tdPts.textContent = equipo.puntos;
+        const tdPuntos = document.createElement("td");
+        tdPuntos.textContent = equipo.puntos;
 
-        if (index >= 5) {
-          tdPos.classList.add("destacado-rojo");
-          tdEquipo.classList.add("destacado-rojo");
-          tdPts.classList.add("destacado-rojo");
+        if (index + 13 >= 16) {
+          tr.classList.add("destacado-rojo");
         }
 
         tr.appendChild(tdPos);
-        tr.appendChild(tdEquipo);
-        tr.appendChild(tdPts);
+        tr.appendChild(tdNombre);
+        tr.appendChild(tdPuntos);
         tabla.appendChild(tr);
       });
     }
 
     crearJornadas();
-    calcularTabla();
+    actualizarTabla();
   </script>
+
 </body>
 </html>
